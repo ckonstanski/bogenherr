@@ -1,0 +1,53 @@
+body {
+    background-color: #161012;
+    color: white;
+}
+
+p {
+    font-size: 14px;
+}
+
+#container {
+    width: 100%;
+    margin: 20px auto;
+}
+
+.table {
+    color: white;
+}
+
+.nav-link {
+    color: white;
+    cursor: pointer;
+}
+
+.well {
+    background-color: #2c180d;
+    border: 1px black solid;
+    text-align: center;
+}
+
+.banner {
+    background-image: url("/static/images/violin-strip.jpg");
+    background-repeat: repeat;
+    background-position: left;
+}
+
+.form-control {
+    width: 600px;
+}
+
+.contact-info {
+    color: #59200e;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 0.4;
+}
+
+.banner-title {
+    color: #59200e;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 0.4;
+}

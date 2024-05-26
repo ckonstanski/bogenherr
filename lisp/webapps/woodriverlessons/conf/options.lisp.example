@@ -1,0 +1,13 @@
+(:name "woodriverlessons"
+ :url "woodriverlessons.org"
+ :document-root "woodriverlessons"
+ :title "Wood River Orchestra"
+ :meta-description "A website for the members of the Wood River Orchestra written in Common Lisp/Hunchentoot and ClojureScript."
+ :databases (:db-woodriverlessons ("127.0.0.1" "woodriverlessons" "woodriverlessons" "password"))
+ :mail-mx "mail.ckons.org"
+ :mail-from "postmaster@ckons.org"
+ :mail-postmaster "postmaster@ckons.org"
+ :mail-webmaster "webmaster@ckons.org"
+ :mail-info "info@ckons.org"
+ :mail-login-notify "me@ckons.org"
+ :mail-authentication ("me@ckons.org" "password"))
