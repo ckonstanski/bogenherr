@@ -48,7 +48,7 @@
         (setf (form instance) (make-form "about-us-modify-form"
                                          nil
                                          nil
-                                         `((:name "txt-content" :field-type "textarea" :value ,(content about-us))
+                                         `((:label "Content" :name "txt-content" :field-type "textarea" :value ,(content about-us) :required "required")
                                            (:label "Modify" :field-type "button" :onclick "on_about_us_modify_submit_clicked()"))))))))
 
 (defun about-us-modify-submit-json (content)

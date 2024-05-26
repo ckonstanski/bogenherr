@@ -51,3 +51,7 @@ p {
     text-align: center;
     line-height: 0.4;
 }
+
+.modal-content {
+    background-color: #2c180d;
+}
