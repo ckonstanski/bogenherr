@@ -86,6 +86,15 @@
 (defmacro .about-us ()
   `(about-us-json))
 
+(defmacro .about-us-view ()
+  `(about-us-view-json))
+
+(defmacro .about-us-modify ()
+  `(about-us-modify-json))
+
+(defmacro .about-us-modify-submit ()
+  `(about-us-modify-submit-json content))
+
 (defmacro .testimonials ()
   `(testimonials-json))
 
@@ -172,6 +181,9 @@
 (define-endpoint :get "/password" () .password)
 (define-endpoint :post "/password/submit" ((id :parameter-type 'integer) (pwd :parameter-type 'string) (pwd2 :parameter-type 'string)) .password-submit)
 (define-endpoint :get "/about-us" () .about-us)
+(define-endpoint :get "/about-us/view" () .about-us-view)
+(define-endpoint :post "/about-us/modify" () .about-us-modify)
+(define-endpoint :post "/about-us/modify/submit" ((content :parameter-type 'string)) .about-us-modify-submit)
 (define-endpoint :get "/testimonials" () .testimonials)
 (define-endpoint :get "/testimonials/view" () .testimonials-view)
 (define-endpoint :post "/testimonials/modify" () .testimonials-modify)

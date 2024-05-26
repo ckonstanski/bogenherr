@@ -59,6 +59,16 @@
 (declare template-about-us)
 (declare handler-about-us)
 (declare render-about-us)
+(declare template-about-us-view)
+(declare handler-about-us-view)
+(declare render-about-us-view)
+(declare on-about-us-modify-clicked)
+(declare template-about-us-modify)
+(declare handler-about-us-modify)
+(declare render-about-us-modify)
+(declare on-about-us-modify-submit-clicked)
+(declare handler-about-us-modify-submit)
+(declare render-about-us-modify-submit)
 (declare template-testimonials)
 (declare handler-testimonials)
 (declare render-testimonials)
@@ -436,32 +446,93 @@
 
 (hiccups/defhtml template-about-us [jsonobj]
   [:h1 {:style "text-align: center"} "About the Studio"]
-  [:h3 "The Teacher"]
-  [:p "My name is Carlos Konstanski. I am the principal violist in the Wood River Orchestra. I have previously played in the viola sections of the following college and community orchestras:"]
-  [:ul
-   [:li "Idaho State Civic Symphony in Pocatello ID"]
-   [:li "Health and Wellness Orchestra in Fort Collins CO"]
-   [:li "Loveland Orchestra in Loveland CO"]
-   [:li "University of Oregon Symphony Orchestra in Eugene OR"]
-   [:li "Leipziger Universitätsorchester in Leipzig Germany"]]
-  [:p "I started playing the viola at age 10 and picked up the violin decades later. My viola is a fine instrument made by Bronek Cison in 2010, while my violin is a high-quality student instrument made 100 years ago in Bohemia by an unknown luthier."]
-  [:p "Most of my musical studies took place at Idaho State University. I was a music major from 1988 to 1993. Then I returned to ISU from 2010 to 2012 to study computer science. It was during this latter period that I had the great fortune and privilege to study with " [:a {:href "https://nafme.org/member-profile/chung-park/" :target "_blank"} "Dr. Chung Park"] ". These two years were an immensely productive and life-changing experience. What I learned from this incomparable master informs every aspect of my playing today, and it is this body of knowledge that I wish to share with my musical community. A high-quality teacher makes all the difference! Every well-trained player has a teacher to whom they owe everything."]
-  [:h3 "The Philosophy"]
-  [:p "Like all art, playing the violin or viola makes two demands on the artist. One must possess artistic ideas worth expressing and also the technical craft which provides the means to express these ideas. The finest artistic thoughts ever conceived will never see the light of day if the performer lacks the technique to express them. Likewise the most tremendous technique in the world will not inspire the audience if it is not informed by artistic intent."]
-  [:p "My goal as a teacher is to help you develop a solid technique that you can use to express your own artistic thoughts. I am artistically highly opinionated and I want my students to share this quality even if, and especially if, their ideas differ from mine. If you ask me technical questions then you can expect concrete answers; but artistic questions will generally be met with more questions. I will help you find your way as a violinist or violist, but you must ultimately find your own way as an artist. That said, I will enthusiastically guide you on your artistic journey, providing you with the tools to make smart choices. But I won't make the choices for you, for that would be irresponsible on my part and stifling for you."]
-  [:p "A solid technique must be built on a sound foundation. One starts with certain fundamentals and continually revisits them to ensure that they remain strong. Without solid fundamentals the entire structure topples like a house of cards. These fundamentals fall into three physical zones corresponding to the middle, left and right parts of the body: the instrument hold and posture, the left-hand technique and the bow technique. If your fundamentals are rock-solid then the sky is the limit (and you don't need me!). However if your previous training was lacking then you may find it necessary to relearn some things in order to rebuild your foundation. This is a bitter pill for many students to swallow. Since it is so essential to the entire process, you will find that I won't offer any leniency in this area. I went through it myself after having played with a hobbled technique for 30 years and it was the best thing that I ever did. Don't let your ego fool you into thinking that you don't need this. Your ego is a liar. It is not interested in your artistic development. It only wants to make you feel good about yourself. It is the antithesis of truth. Artists seek truth, not palliatives."]
-  [:p "The study of the violin or viola is a constant exercise in being drawn out of your comfort zone. This is just another way of saying that it's about exploring what lies beyond the limits of your experience. Approach it with an adventurous spirit. Learn to love taking that next step into the unknown. When you are trying something new and it is uncomfortable, don't give up on it. It will eventually feel natural and then new doors will open for you."]
-  [:h3 "The Studio"]
-  [:p "Students may come to my house for lessons or I can come to you. My house is conveniently located in Hailey. If I come to you then I will charge for the extra time and travel expense. My rates are highly individual. Everyone is different."]
-  [:p "The frequency of lessons also varies depending on the individual. Some students who are highly motivated and have lots of time to practice will have a lesson every week. Most others (those with full-time jobs or other major time commitments) will have a lesson every two weeks. I expect all students to commit to at least some practice every day, even if it's only a half-hour. Missed days should be a rare occurrence. I miss some days myself (as I have a day job), but I feel bad about it. Self-motivation is the #1 ingredient for success. With it you can achieve anything. Without it you can achieve nothing."])
+  [:div {:id "content"}]
+  [:div {:id "modify"
+         :class "modal fade"
+         :role "dialog"}
+   [:div {:class "modal-dialog modal-lg"}
+    [:div {:class "modal-content"}
+     [:div {:class "modal-header"}
+      [:h5 [:span {:id "modify-title"}]]
+      [:button {:type "button"
+                :class "close"
+                :data-dismiss "modal"}
+       "&times;"]]
+     [:div {:id "modify-body"
+            :class "modal-body"
+            :style "height: 460px;"}]
+     [:div {:class "modal-footer"}
+      [:button {:type "submit"
+                :class "btn btn-danger btn-default"
+                :data-dismiss "modal"}
+       [:span {:class "glyphicon glyphicon-remove"}]
+       "Cancel"]]]]])
 
 (defn handler-about-us [response]
   (let [jsonobj (js->clj (js/JSON.parse response))]
     (notifications jsonobj)
-    (dommy/set-html! (dommy/sel1 :#body) (template-about-us jsonobj))))
+    (dommy/set-html! (dommy/sel1 :#body) (template-about-us jsonobj))
+    (render-about-us-view)))
 
 (defn render-about-us []
   (GET "/about-us" {:handler handler-about-us}))
+
+;; about-us-view
+
+(hiccups/defhtml template-about-us-view [jsonobj]
+  (when (get jsonobj "adminP")
+    [:div {:style "text-align: right;"}
+     [:img {:src "/static/images/edit.png"
+            :style "cursor:pointer; cursor:hand"
+            :onclick (str (namespace ::x) ".on_about_us_modify_clicked()")}]])
+  [:div {:id "markdown"}])
+
+(defn handler-about-us-view [response]
+  (let [jsonobj (js->clj (js/JSON.parse response))]
+    (dommy/set-html! (dommy/sel1 :#content) (template-about-us-view jsonobj))
+    (dommy/set-html! (dommy/sel1 :#markdown) (markdown-to-html (get jsonobj "content")))))
+
+(defn render-about-us-view []
+  (GET "/about-us/view" {:handler handler-about-us-view}))
+
+;; about-us-modify
+
+(defn on-about-us-modify-clicked []
+  (render-about-us-modify))
+
+(hiccups/defhtml template-about-us-modify [jsonobj]
+  (ck-form/template-generic-form (get jsonobj "form") (namespace ::x)))
+
+(defn handler-about-us-modify [response]
+  (let [jsonobj (js->clj (js/JSON.parse response))]
+    (auth-notifications jsonobj)
+    (dommy/set-html! (dommy/sel1 :#modify-title) "About Us - Modify")
+    (dommy/set-html! (dommy/sel1 :#modify-body) (template-about-us-modify jsonobj))
+    (.modal (jquery "#modify"))))
+
+(defn render-about-us-modify []
+  (POST "/about-us/modify" {:handler handler-about-us-modify}))
+
+;; about-us-modify-submit
+
+(defn on-about-us-modify-submit-clicked []
+  (when (-> (jquery "#about-us-modify-form")
+            (.get "0")
+            (.checkValidity))
+    (.modal (jquery "#modify") "hide")
+    (render-about-us-modify-submit)))
+
+(defn handler-about-us-modify-submit [response]
+  (let [jsonobj (js->clj (js/JSON.parse response))]
+    (auth-notifications jsonobj)
+    (dommy/set-html! (dommy/sel1 :#content) (template-about-us-view jsonobj))
+    (dommy/set-html! (dommy/sel1 :#markdown) (markdown-to-html (get jsonobj "content")))))
+
+(defn render-about-us-modify-submit []
+  (POST "/about-us/modify/submit"
+        {:format :raw
+         :params {:content (dommy/value (dommy/sel1 :#txt-content))}
+         :handler handler-about-us-modify-submit}))
 
 ;; testimonials
 
