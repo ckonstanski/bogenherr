@@ -7,7 +7,12 @@ p {
     font-size: 14px;
 }
 
-#container {
+hr {
+    border: 1px #ffd081 solid;
+    width: 200px;
+}
+
+.container-fluid {
     width: 100%;
     margin: 20px auto;
 }
@@ -34,6 +39,21 @@ p {
     background-position: left;
 }
 
+.banner-title {
+    width: *;
+    color: #59200e;
+    font-size: 28px;
+    font-style: italic;
+    font-weight: bold;
+    text-align: center;
+}
+
+.banner-menu {
+    width: 150px;
+    text-align: right;
+    vertical-align: top;
+}
+
 .form-control {
     width: 600px;
     background-color: #ffd081;
@@ -46,29 +66,14 @@ p {
     line-height: 0.4;
 }
 
-.banner-title {
-    width: *;
-    color: #59200e;
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-}
-
-.banner-menu {
-    width: 150px;
-    text-align: right;
-    vertical-align: top;
-}
-
 .modal-content {
     background-color: #2c180d;
 }
 
-#footer {
-    text-align: center;
+#body {
+    min-height: 500px;
 }
 
-hr {
-    border: 1px #ffd081 solid;
-    width: 200px;
+#footer {
+    text-align: center;
 }
