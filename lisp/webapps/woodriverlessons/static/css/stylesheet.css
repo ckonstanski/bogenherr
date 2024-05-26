@@ -50,7 +50,9 @@ p {
     color: #59200e;
     font-size: 24px;
     font-weight: bold;
-    text-align: right;
+    display: flex;
+    justify-content: right;
+    align-items: center;
 }
 
 .modal-content {
@@ -63,5 +65,5 @@ p {
 
 hr {
     border: 1px #ffd081 solid;
-    width: 200px;;
+    width: 200px;
 }
