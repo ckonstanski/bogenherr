@@ -21,7 +21,7 @@
       ((body :onload ,(format nil "woodriverlessons.core.~a" ,onload-fn))
        ((div :class "container-fluid")
         ((div :class "row banner")
-         ((div :class "col banner-title") "Violin and Viola Lessons in the Wood River Valley")
+         ((div :class "col banner-title") "Wood River Lessons")
          ((div :id "menu-user" :class "col" :style "text-align: right;")))
         ((div :id "menu" :class "well"))
         ((div :id "location" :style "display: none"))
