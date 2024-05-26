@@ -28,6 +28,7 @@ p {
 }
 
 .banner {
+    height: 90px;
     background-image: url("/static/images/violin-strip.jpg");
     background-repeat: repeat;
     background-position: left;
@@ -46,10 +47,9 @@ p {
 
 .banner-title {
     color: #59200e;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: bold;
-    text-align: center;
-    line-height: 0.4;
+    text-align: right;
 }
 
 .modal-content {
