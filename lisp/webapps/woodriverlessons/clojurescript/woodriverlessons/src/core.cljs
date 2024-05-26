@@ -629,7 +629,6 @@
 
 (hiccups/defhtml template-contact-us [jsonobj]
   [:h1 {:style "text-align: center"} "Reach out to me by filling out the form."]
-  [:p {:style "text-align: center"} "Or call me at (970) 294-9708."]
   [:div {:id "content"}])
 
 (defn handler-contact-us [response]
