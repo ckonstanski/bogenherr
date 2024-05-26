@@ -47,12 +47,17 @@ p {
 }
 
 .banner-title {
+    width: *;
     color: #59200e;
     font-size: 24px;
     font-weight: bold;
-    display: flex;
-    justify-content: right;
-    align-items: center;
+    text-align: center;
+}
+
+.banner-menu {
+    width: 150px;
+    text-align: right;
+    vertical-align: top;
 }
 
 .modal-content {
