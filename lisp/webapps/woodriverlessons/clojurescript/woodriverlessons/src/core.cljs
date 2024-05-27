@@ -620,9 +620,13 @@
                  [:td {:onclick onclick} (get rec "id")]
                  [:td {:onclick onclick} (get rec "description")]
                  [:td
-                  [:embed {:src (str "/gallery/file/view?id=" (get rec "id"))
-                           :type (get rec "mime_type")
-                           :height "400"}]]
+                  (cond (str/includes? (get rec "mime_type") "image/")
+                        [:img {:height "400"
+                               :src (str "/gallery/file/view?id=" (get rec "id"))}]
+                        (str/includes? (get rec "mime_type") "video/")
+                        [:embed {:src (str "/gallery/file/view?id=" (get rec "id"))
+                                 :type (get rec "mime_type")
+                                 :height "400"}])]
                  (when (get jsonobj "adminP")
                    [:td {:style "text-align: right;"}
                     [:img {:src "/static/images/delete.png"
