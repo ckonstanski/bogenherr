@@ -47,11 +47,12 @@
                                      nil
                                      t
                                      `((:name "description" :label "Description" :field-type "textarea")
-                                       (:name "upload" :label "Image/Video" :field-type "file" :required "required")
+                                       (:name "video_embed_url" :label "Video embed URL" :field-type "text")
+                                       (:name "upload" :label "Image" :field-type "file")
                                        (:label "Add Gallery" :field-type "button" :onclick "on_gallery_add_submit_clicked()"))))))
 
-(defun gallery-add-submit-json (description upload)
-  (declare (special description))
+(defun gallery-add-submit-json (description video_embed_url upload)
+  (declare (special description video_embed_url))
   (with-auth (instance gallery/add-modify-delete-service "gallery-modify")
     (with-woodriverlessons-database
       (let ((general-pkg (make-instance 'general-pkg))
@@ -63,12 +64,13 @@
                                         (intersection `(,x) `(upload)))
                                       (sb-introspect:function-lambda-list #'gallery-add-submit-json))
               do (setf (slot-value gallery param) (symbol-value param)))
-        (let ((tmpdir (tmpdir:mkdtemp :prefix "woodriverlessons-gallery-")))
-          (setf new-filepath (format nil "~a~a" tmpdir (file-namestring tmp-filepath)))
-          (fad:copy-file tmp-filepath new-filepath)
-          (setf (filename gallery) orig-filename)
-          (setf (mime_type gallery) (org-ckons-file::get-mime-type new-filepath))
-          (setf (content gallery) (org-ckons-file::file-as-hex new-filepath)))
+        (when upload
+          (let ((tmpdir (tmpdir:mkdtemp :prefix "woodriverlessons-gallery-")))
+            (setf new-filepath (format nil "~a~a" tmpdir (file-namestring tmp-filepath)))
+            (fad:copy-file tmp-filepath new-filepath)
+            (setf (filename gallery) orig-filename)
+            (setf (mime_type gallery) (org-ckons-file::get-mime-type new-filepath))
+            (setf (content gallery) (org-ckons-file::file-as-hex new-filepath))))
         (insert-gallery general-pkg gallery)
         (setf (session-value :message) "Gallery added successfully.")))))
 
@@ -83,12 +85,13 @@
                                              t
                                              `((:name "id" :field-type "hidden" :value ,(id gallery) :required "required")
                                                (:name "description" :label "Description" :value ,(description gallery) :field-type "textarea")
+                                               (:name "video_embed_url" :label "Video embed URL" :field-type "text" :value ,(video_embed_url gallery))
                                                (:name "upload" :label "Image/Video" :field-type "file")
                                                (:label "Modify Gallery" :field-type "button" :onclick "on_gallery_modify_submit_clicked()"))))
             (setf (session-value :errormsg) "Error: could not modify gallery. Not found."))))))
 
-(defun gallery-modify-submit-json (id description upload)
-  (declare (special description))
+(defun gallery-modify-submit-json (id description video_embed_url upload)
+  (declare (special description video_embed_url))
   (with-auth (instance gallery/add-modify-delete-service "gallery-modify")
     (with-woodriverlessons-database
       (let* ((general-pkg (make-instance 'general-pkg))

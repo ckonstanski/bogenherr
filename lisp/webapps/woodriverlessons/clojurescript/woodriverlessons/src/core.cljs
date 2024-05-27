@@ -607,7 +607,7 @@
             [:tr
              [:th {:scope "col"} "ID"]
              [:th {:scope "col"} "Description"]
-             [:th {:scope "col"} "Image/Video"]
+             [:th {:scope "col"} "Content"]
              (when (get jsonobj "adminP")
                [:th {:scope "col" :style "text-align: right;"} "Del"])]]
            [:tbody
@@ -620,14 +620,17 @@
                  [:td {:onclick onclick} (get rec "id")]
                  [:td {:onclick onclick} (get rec "description")]
                  [:td
-                  (cond (str/includes? (get rec "mime_type") "image/")
-                        [:img {:height "400"
-                               :src (str "/gallery/file/view?id=" (get rec "id"))}]
-                        (str/includes? (get rec "mime_type") "video/")
-                        [:video {:height "400"
-                                 :controls "controls"}
-                         [:source {:src (str "/gallery/file/view?id=" (get rec "id"))
-                                   :type (get rec "mime_type")}]])]
+                  (cond (not (= (get rec "video_embed_url") "null"))
+                        [:iframe {:width "720"
+                                  :height "405"
+                                  :src (get rec "video_embed_url")
+                                  :frameborder "0"
+                                  :allow "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                  :referrerpolicy "strict-origin-when-cross-origin"
+                                  :allowfullscreen "allowfullscreen"}]
+                        :else
+                        [:img {:height "405"
+                               :src (str "/gallery/file/view?id=" (get rec "id"))}])]
                  (when (get jsonobj "adminP")
                    [:td {:style "text-align: right;"}
                     [:img {:src "/static/images/delete.png"

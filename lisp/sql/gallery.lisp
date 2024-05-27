@@ -16,6 +16,9 @@
    (mime_type :initarg :mime_type
               :initform nil
               :accessor mime_type)
+   (video_embed_url :initarg :video_embed_url
+                    :initform nil
+                    :accessor video_embed_url)
    (content :initarg :content
             :initform nil
             :accessor content)

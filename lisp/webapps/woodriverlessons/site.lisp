@@ -105,13 +105,13 @@
   `(gallery-add-json))
 
 (defmacro .gallery-add-submit ()
-  `(gallery-add-submit-json description upload))
+  `(gallery-add-submit-json description video_embed_url upload))
 
 (defmacro .gallery-modify ()
   `(gallery-modify-json id))
 
 (defmacro .gallery-modify-submit ()
-  `(gallery-modify-submit-json id description upload))
+  `(gallery-modify-submit-json id description video_embed_url upload))
 
 (defmacro .gallery-delete ()
   `(gallery-delete-json id))
@@ -205,9 +205,9 @@
 (define-endpoint :get "/gallery" () .gallery)
 (define-endpoint :get "/gallery/view" () .gallery-view)
 (define-endpoint :post "/gallery/add" () .gallery-add)
-(define-endpoint :post "/gallery/add/submit" ((description :parameter-type 'string) (upload :parameter-type 'string)) .gallery-add-submit)
+(define-endpoint :post "/gallery/add/submit" ((description :parameter-type 'string) (video_embed_url :parameter-type 'string) (upload :parameter-type 'string)) .gallery-add-submit)
 (define-endpoint :post "/gallery/modify" ((id :parameter-type 'integer)) .gallery-modify)
-(define-endpoint :post "/gallery/modify/submit" ((id :parameter-type 'integer) (description :parameter-type 'string) (upload :parameter-type 'string)) .gallery-modify-submit)
+(define-endpoint :post "/gallery/modify/submit" ((id :parameter-type 'integer) (description :parameter-type 'string) (video_embed_url :parameter-type 'string) (upload :parameter-type 'string)) .gallery-modify-submit)
 (define-endpoint :post "/gallery/delete" ((id :parameter-type 'integer)) .gallery-delete)
 (define-endpoint :get "/gallery/file/view" ((id :parameter-type 'integer)) .gallery-file-view)
 (define-endpoint :get "/testimonials" () .testimonials)

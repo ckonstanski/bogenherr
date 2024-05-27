@@ -5,6 +5,7 @@ create type general.gallery_t as (
     description text,
     filename character varying,
     mime_type character varying,
+    video_embed_url character varying,
     content text,
     created timestamp without time zone,
     modified timestamp without time zone

@@ -3,6 +3,7 @@ drop function general.update_gallery (
     p_description text,
     p_filename character varying,
     p_mime_type character varying,
+    p_video_embed_url character varying,
     p_hex text
 );
 
@@ -11,6 +12,7 @@ create or replace function general.update_gallery (
     p_description text,
     p_filename character varying,
     p_mime_type character varying,
+    p_video_embed_url character varying,
     p_hex text
 )
 returns bigint
@@ -27,6 +29,7 @@ begin
         set description = p_description,
             filename = p_filename,
             mime_type = p_mime_type,
+            video_embed_url = p_video_embed_url,
             content = decode(p_hex, 'hex'),
             modified = now()
         where id = p_id;

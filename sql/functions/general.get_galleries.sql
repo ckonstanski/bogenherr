@@ -9,7 +9,11 @@ begin
         g.description,
         g.filename,
         g.mime_type,
-        substring(g.content::text from 3) as content,
+        g.video_embed_url,
+        case
+          when g.content is null then null
+          else substring(g.content::text from 3)
+        end as content,
         g.created,
         g.modified
     from general.gallery g

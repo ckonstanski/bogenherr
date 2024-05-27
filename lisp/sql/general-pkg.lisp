@@ -23,20 +23,22 @@
 
 (defmethod insert-gallery ((general-pkg general-pkg) (gallery gallery))
   (setf (*table gallery) (format nil
-                                 "general.insert_gallery('~a', '~a', '~a', '~a')"
-                                 (description gallery)
-                                 (filename gallery)
-                                 (mime_type gallery)
-                                 (content gallery)))
+                                 "general.insert_gallery(~a, ~a, ~a, ~a, ~a)"
+                                 (org-ckons-sql::sanitize gallery (description gallery))
+                                 (org-ckons-sql::sanitize gallery (filename gallery))
+                                 (org-ckons-sql::sanitize gallery (mime_type gallery))
+                                 (org-ckons-sql::sanitize gallery (video_embed_url gallery))
+                                 (org-ckons-sql::sanitize gallery (content gallery))))
   (setf (id gallery) (caar (call-pg-function general-pkg gallery)))
   (id gallery))
 
 (defmethod update-gallery ((general-pkg general-pkg) (gallery gallery))
   (setf (*table gallery) (format nil
-                                 "general.update_gallery(~a, '~a', '~a', '~a', '~a')"
+                                 "general.update_gallery(~a, ~a, ~a, ~a, ~a, ~a)"
                                  (id gallery)
-                                 (description gallery)
-                                 (filename gallery)
-                                 (mime_type gallery)
-                                 (content gallery)))
+                                 (org-ckons-sql::sanitize gallery (description gallery))
+                                 (org-ckons-sql::sanitize gallery (filename gallery))
+                                 (org-ckons-sql::sanitize gallery (mime_type gallery))
+                                 (org-ckons-sql::sanitize gallery (video_embed_url gallery))
+                                 (org-ckons-sql::sanitize gallery (content gallery))))
   (caar (call-pg-function general-pkg gallery)))
