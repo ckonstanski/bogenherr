@@ -69,6 +69,27 @@
 (declare on-about-us-modify-submit-clicked)
 (declare handler-about-us-modify-submit)
 (declare render-about-us-modify-submit)
+(declare render-gallery)
+(declare template-gallery-view)
+(declare handler-gallery-view)
+(declare render-gallery-view)
+(declare on-gallery-add-clicked)
+(declare template-gallery-add)
+(declare handler-gallery-add)
+(declare render-gallery-add)
+(declare on-gallery-add-submit-clicked)
+(declare handler-gallery-add-submit)
+(declare render-gallery-add-submit)
+(declare on-gallery-modify-clicked)
+(declare template-gallery-modify)
+(declare handler-gallery-modify)
+(declare render-gallery-modify)
+(declare on-gallery-modify-submit-clicked)
+(declare handler-gallery-modify-submit)
+(declare render-gallery-modify-submit)
+(declare on-gallery-delete-clicked)
+(declare handler-gallery-delete)
+(declare render-gallery-delete)
 (declare template-testimonials)
 (declare handler-testimonials)
 (declare render-testimonials)
@@ -533,6 +554,185 @@
         {:format :raw
          :params {:content (dommy/value (dommy/sel1 :#txt-content))}
          :handler handler-about-us-modify-submit}))
+
+;; gallery
+
+(hiccups/defhtml template-gallery [jsonobj]
+  [:h1 {:style "text-align: center"} "Gallery"]
+  [:div {:id "content"}]
+  [:div {:id "modify"
+         :class "modal fade"
+         :role "dialog"}
+   [:div {:class "modal-dialog modal-lg"}
+    [:div {:class "modal-content"}
+     [:div {:class "modal-header"}
+      [:h5 [:span {:id "modify-title"}]]
+      [:button {:type "button"
+                :class "close"
+                :data-dismiss "modal"}
+       "&times;"]]
+     [:div {:id "modify-body"
+            :class "modal-body"
+            :style "height: 425px;"}]
+     [:div {:class "modal-footer"}
+      [:button {:type "submit"
+                :class "btn btn-danger btn-default"
+                :data-dismiss "modal"}
+       [:span {:class "glyphicon glyphicon-remove"}]
+       "Cancel"]]]]])
+
+(defn handler-gallery [response]
+  (let [jsonobj (js->clj (js/JSON.parse response))]
+    (auth-notifications jsonobj)
+    (dommy/set-html! (dommy/sel1 :#body) (template-gallery jsonobj))
+    (render-gallery-view)))
+
+(defn render-gallery []
+  (GET "/gallery" {:handler handler-gallery}))
+
+;; gallery-view
+
+(hiccups/defhtml template-gallery-view [jsonobj]
+  [:div {:style "text-align: right"}
+   (when (get jsonobj "adminP")
+     [:img {:src "/static/images/add.png"
+            :style "cursor:pointer; cursor:hand"
+            :onclick (str (namespace ::x) ".on_gallery_add_clicked()")}])]
+  (let [results (get jsonobj "results")]
+    (cond (empty? results)
+          [:h5 {:style "text-align: center"} "No results found."]
+          :else
+          [:table {:class "table table-hover"}
+           [:thead
+            [:tr
+             [:th {:scope "col"} "ID"]
+             [:th {:scope "col"} "Description"]
+             [:th {:scope "col"} "Image/Video"]
+             (when (get jsonobj "adminP")
+               [:th {:scope "col" :style "text-align: right;"} "Del"])]]
+           [:tbody
+            (for [rec results]
+              (let [onclick (cond (get jsonobj "adminP")
+                                  (str (namespace ::x) ".on_gallery_modify_clicked(" (get rec "id") ")")
+                                  :else
+                                  "javascript:void")]
+                [:tr
+                 [:td {:onclick onclick} (get rec "id")]
+                 [:td {:onclick onclick} (get rec "description")]
+                 [:td
+                  [:embed {:src (str "/gallery/file/view?id=" (get rec "id"))
+                           :type (get rec "mime_type")
+                           :height "400"}]]
+                 (when (get jsonobj "adminP")
+                   [:td {:style "text-align: right;"}
+                    [:img {:src "/static/images/delete.png"
+                           :onclick (str (namespace ::x) ".on_gallery_delete_clicked(" (get rec "id") ")")}]])]))]])))
+
+(defn handler-gallery-view [response]
+  (let [jsonobj (js->clj (js/JSON.parse response))]
+    (auth-notifications jsonobj)
+    (dommy/set-html! (dommy/sel1 :#content) (template-gallery-view jsonobj))))
+
+(defn render-gallery-view []
+  (GET "/gallery/view" {:handler handler-gallery-view}))
+
+;; gallery-add
+
+(defn on-gallery-add-clicked []
+  (render-gallery-add))
+
+(hiccups/defhtml template-gallery-add [jsonobj]
+  (ck-form/template-generic-form (get jsonobj "form") (namespace ::x)))
+
+(defn handler-gallery-add [response]
+  (let [jsonobj (js->clj (js/JSON.parse response))]
+    (auth-notifications jsonobj)
+    (dommy/set-html! (dommy/sel1 :#modify-title) "Gallery - Add")
+    (dommy/set-html! (dommy/sel1 :#modify-body) (template-gallery-add jsonobj))
+    (.modal (jquery "#modify"))))
+
+(defn render-gallery-add []
+  (POST "/gallery/add" {:handler handler-gallery-add}))
+
+;; gallery-add-submit
+
+(defn on-gallery-add-submit-clicked []
+  (when (-> (jquery "#gallery-add-form")
+            (.get "0")
+            (.checkValidity))
+    (.modal (jquery "#modify") "hide")
+    (render-gallery-add-submit)))
+
+(defn handler-gallery-add-submit [response]
+  (let [jsonobj (js->clj (js/JSON.parse response))]
+    (auth-notifications jsonobj)
+    (on-menu-clicked "/gallery")))
+
+(defn render-gallery-add-submit []
+  (let [form-data (js/FormData. (dommy/sel1 :#gallery-add-form))]
+    (POST "/gallery/add/submit"
+          {:body form-data
+           :response-format (raw-response-format)
+           :handler handler-gallery-add-submit})))
+
+;; gallery-modify
+
+(defn on-gallery-modify-clicked [id]
+  (render-gallery-modify id))
+
+(hiccups/defhtml template-gallery-modify [jsonobj]
+  (ck-form/template-generic-form (get jsonobj "form") (namespace ::x)))
+
+(defn handler-gallery-modify [response]
+  (let [jsonobj (js->clj (js/JSON.parse response))]
+    (auth-notifications jsonobj)
+    (dommy/set-html! (dommy/sel1 :#modify-title) "Gallery - Modify")
+    (dommy/set-html! (dommy/sel1 :#modify-body) (template-gallery-modify jsonobj))
+    (.modal (jquery "#modify"))))
+
+(defn render-gallery-modify [id]
+  (POST "/gallery/modify"
+        {:format :raw
+         :params {:id id}
+         :handler handler-gallery-modify}))
+
+;; gallery-modify-submit
+
+(defn on-gallery-modify-submit-clicked []
+  (when (-> (jquery "#gallery-modify-form")
+            (.get "0")
+            (.checkValidity))
+    (.modal (jquery "#modify") "hide")
+    (render-gallery-modify-submit)))
+
+(defn handler-gallery-modify-submit [response]
+  (let [jsonobj (js->clj (js/JSON.parse response))]
+    (auth-notifications jsonobj)
+    (on-menu-clicked "/gallery")))
+
+(defn render-gallery-modify-submit []
+  (let [form-data (js/FormData. (dommy/sel1 :#gallery-modify-form))]
+    (POST "/gallery/modify/submit"
+          {:body form-data
+           :response-format (raw-response-format)
+           :handler handler-gallery-add-submit})))
+
+;; gallery-delete
+
+(defn on-gallery-delete-clicked [id]
+  (when (js/confirm (str "Are you sure you want to delete " id "? This action cannot be undone."))
+    (render-gallery-delete id)))
+
+(defn handler-gallery-delete [response]
+  (let [jsonobj (js->clj (js/JSON.parse response))]
+    (auth-notifications jsonobj)
+    (on-menu-clicked "/gallery")))
+
+(defn render-gallery-delete [id]
+  (POST "/gallery/delete"
+        {:format :raw
+         :params {:id id}
+         :handler handler-gallery-delete}))
 
 ;; testimonials
 
@@ -1043,6 +1243,7 @@
         (= handler "/profile") (render-profile)
         (= handler "/password") (render-password)
         (= handler "/about-us") (render-about-us)
+        (= handler "/gallery") (render-gallery)
         (= handler "/testimonials") (render-testimonials)
         (= handler "/contact-us") (render-contact-us)
         (= handler "/messages") (render-messages)

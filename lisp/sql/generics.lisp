@@ -94,6 +94,18 @@ sessionid."))
 (defgeneric get-testimonials (record-pkg)
   (:documentation "Gets the one and only general.testimonials record."))
 
+(defgeneric get-gallery (general-pkg id)
+  (:documentation "Gets a general.gellery record by id."))
+
+(defgeneric get-galleries (general-pkg)
+  (:documentation "Gets all general.gallery records sorted by modified desc."))
+
+(defgeneric insert-gallery (general-pkg gallery)
+  (:documentation "Inserta a new general.gallery record."))
+
+(defgeneric update-gallery (general-pkg gallery)
+  (:documentation "Updates an existing general.gallery record."))
+
 (defgeneric get-contact-us-posts (record-pkg user-id read-p)
   (:documentation "Gets contact.contact_us_posts records."))
 

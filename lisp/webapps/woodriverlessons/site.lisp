@@ -95,6 +95,30 @@
 (defmacro .about-us-modify-submit ()
   `(about-us-modify-submit-json content))
 
+(defmacro .gallery ()
+  `(gallery-json))
+
+(defmacro .gallery-view ()
+  `(gallery-view-json))
+
+(defmacro .gallery-add ()
+  `(gallery-add-json))
+
+(defmacro .gallery-add-submit ()
+  `(gallery-add-submit-json description upload))
+
+(defmacro .gallery-modify ()
+  `(gallery-modify-json id))
+
+(defmacro .gallery-modify-submit ()
+  `(gallery-modify-submit-json id description upload))
+
+(defmacro .gallery-delete ()
+  `(gallery-delete-json id))
+
+(defmacro .gallery-file-view ()
+  `(gallery-file-view id))
+
 (defmacro .testimonials ()
   `(testimonials-json))
 
@@ -115,12 +139,6 @@
 
 (defmacro .contact-us-email ()
   `(contact-us-email-json first_name last_name email phone comments))
-
-(defmacro .contact-us-modify ()
-  `(contact-us-modify-json))
-
-(defmacro .contact-us-modify-submit ()
-  `(contact-us-modify-submit-json content))
 
 (defmacro .messages ()
   `(messages-json))
@@ -184,6 +202,14 @@
 (define-endpoint :get "/about-us/view" () .about-us-view)
 (define-endpoint :post "/about-us/modify" () .about-us-modify)
 (define-endpoint :post "/about-us/modify/submit" ((content :parameter-type 'string)) .about-us-modify-submit)
+(define-endpoint :get "/gallery" () .gallery)
+(define-endpoint :get "/gallery/view" () .gallery-view)
+(define-endpoint :post "/gallery/add" () .gallery-add)
+(define-endpoint :post "/gallery/add/submit" ((description :parameter-type 'string) (upload :parameter-type 'string)) .gallery-add-submit)
+(define-endpoint :post "/gallery/modify" ((id :parameter-type 'integer)) .gallery-modify)
+(define-endpoint :post "/gallery/modify/submit" ((id :parameter-type 'integer) (description :parameter-type 'string) (upload :parameter-type 'string)) .gallery-modify-submit)
+(define-endpoint :post "/gallery/delete" ((id :parameter-type 'integer)) .gallery-delete)
+(define-endpoint :get "/gallery/file/view" ((id :parameter-type 'integer)) .gallery-file-view)
 (define-endpoint :get "/testimonials" () .testimonials)
 (define-endpoint :get "/testimonials/view" () .testimonials-view)
 (define-endpoint :post "/testimonials/modify" () .testimonials-modify)
@@ -191,8 +217,6 @@
 (define-endpoint :get "/contact-us" () .contact-us)
 (define-endpoint :get "/contact-us/view" () .contact-us-view)
 (define-endpoint :post "/contact-us/email" ((first_name :parameter-type 'string) (last_name :parameter-type 'string) (email :parameter-type 'string) (phone :parameter-type 'string) (comments :parameter-type 'string)) .contact-us-email)
-(define-endpoint :post "/contact-us/modify" () .contact-us-modify)
-(define-endpoint :post "/contact-us/modify/submit" ((content :parameter-type 'string)) .contact-us-modify-submit)
 (define-endpoint :get "/messages" () .messages)
 (define-endpoint :post "/messages/results" ((read :parameter-type 'string)) .messages-results)
 (define-endpoint :post "/messages/mark" ((read :parameter-type 'string) (id :parameter-type 'integer)) .messages-mark)

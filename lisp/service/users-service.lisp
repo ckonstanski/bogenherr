@@ -61,8 +61,7 @@
                                          `((:name "first_name" :label "First Name" :field-type "text" :required "required")
                                            (:name "last_name" :label "Last Name" :field-type "text" :required "required")
                                            (:name "email" :label "Email" :field-type "text" :required "required")
-                                           ,@(role-checkboxes role-groups
-                                                              `(,(get-role-group-by-name auth-pkg user "emails-viewer")))
+                                           ,@(role-checkboxes role-groups)
                                            (:label "Add User" :field-type "button" :onclick "on_users_add_submit_clicked()"))))))))
 
 (defun users-add-submit-json (role_groups first_name last_name email)

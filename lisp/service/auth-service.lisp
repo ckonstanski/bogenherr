@@ -39,3 +39,10 @@
        (setf (session-value :message) nil)
        (setf (session-value :errormsg) nil))
      (org-ckons-json::objects-to-json `(,,instance))))
+
+(defmacro with-noauth-raw ((instance rest-service) &body body)
+  `(let ((,instance (make-instance ',rest-service)))
+     (when (location-p ,instance)
+       (setf (session-value :message) nil)
+       (setf (session-value :errormsg) nil))
+     ,@body))

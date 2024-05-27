@@ -45,8 +45,9 @@
                              (:file "about-us" :depends-on ("generics"))
                              (:file "testimonials" :depends-on ("generics"))
                              (:file "contact-us" :depends-on ("generics"))
+                             (:file "gallery" :depends-on ("generics"))
                              (:file "auth-pkg" :depends-on ("user-session-pkg" "user" "role-group" "user-role" "registration"))
-                             (:file "general-pkg" :depends-on ("about-us" "testimonials"))
+                             (:file "general-pkg" :depends-on ("about-us" "testimonials" "gallery"))
                              (:file "contact-pkg" :depends-on ("contact-us"))))
                (:module service
                 :depends-on (sql)
@@ -62,6 +63,7 @@
                              (:file "profile-service" :depends-on ("generic-form" "auth-service"))
                              (:file "password-service" :depends-on ("generic-form" "auth-service"))
                              (:file "about-us-service" :depends-on ("generic-form" "auth-service"))
+                             (:file "gallery-service" :depends-on ("generic-form" "auth-service"))
                              (:file "testimonials-service" :depends-on ("generic-form" "auth-service"))
                              (:file "contact-us-service" :depends-on ("generic-form" "auth-service"))
                              (:file "users-service" :depends-on ("generic-form" "auth-service"))
