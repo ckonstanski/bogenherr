@@ -625,7 +625,7 @@
                                :src (str "/gallery/file/view?id=" (get rec "id"))}]
                         (str/includes? (get rec "mime_type") "video/")
                         [:video {:height "400"
-                                 :cotrols "controls"}
+                                 :controls "controls"}
                          [:source {:src (str "/gallery/file/view?id=" (get rec "id"))
                                    :type (get rec "mime_type")}]])]
                  (when (get jsonobj "adminP")
