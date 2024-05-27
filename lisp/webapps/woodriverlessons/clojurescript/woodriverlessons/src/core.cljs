@@ -624,9 +624,10 @@
                         [:img {:height "400"
                                :src (str "/gallery/file/view?id=" (get rec "id"))}]
                         (str/includes? (get rec "mime_type") "video/")
-                        [:embed {:src (str "/gallery/file/view?id=" (get rec "id"))
-                                 :type (get rec "mime_type")
-                                 :height "400"}])]
+                        [:video {:height "400"
+                                 :cotrols "controls"}
+                         [:source {:src (str "/gallery/file/view?id=" (get rec "id"))
+                                   :type (get rec "mime_type")}]])]
                  (when (get jsonobj "adminP")
                    [:td {:style "text-align: right;"}
                     [:img {:src "/static/images/delete.png"
