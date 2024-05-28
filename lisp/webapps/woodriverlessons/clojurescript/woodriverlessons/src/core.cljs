@@ -602,23 +602,14 @@
     (cond (empty? results)
           [:h5 {:style "text-align: center"} "No results found."]
           :else
-          [:table {:class "table table-hover"}
-           [:thead
-            [:tr
-             [:th {:scope "col"} "ID"]
-             [:th {:scope "col"} "Description"]
-             [:th {:scope "col"} "Content"]
-             (when (get jsonobj "adminP")
-               [:th {:scope "col" :style "text-align: right;"} "Del"])]]
-           [:tbody
-            (for [rec results]
-              (let [onclick (cond (get jsonobj "adminP")
-                                  (str (namespace ::x) ".on_gallery_modify_clicked(" (get rec "id") ")")
-                                  :else
-                                  "javascript:void")]
+          (for [rec results]
+            (let [onclick (cond (get jsonobj "adminP")
+                                (str (namespace ::x) ".on_gallery_modify_clicked(" (get rec "id") ")")
+                                :else
+                                "javascript:void")]
+              [:span {:style "width:720px; height:425px"}
+               [:table
                 [:tr
-                 [:td {:onclick onclick} (get rec "id")]
-                 [:td {:onclick onclick} (get rec "description")]
                  [:td
                   (cond (not (= (get rec "video_embed_url") "null"))
                         [:iframe {:width "720"
@@ -632,9 +623,11 @@
                         [:img {:height "405"
                                :src (str "/gallery/file/view?id=" (get rec "id"))}])]
                  (when (get jsonobj "adminP")
-                   [:td {:style "text-align: right;"}
+                   [:td {:style "text-align:right; vertical-align:top"}
                     [:img {:src "/static/images/delete.png"
-                           :onclick (str (namespace ::x) ".on_gallery_delete_clicked(" (get rec "id") ")")}]])]))]])))
+                           :onclick (str (namespace ::x) ".on_gallery_delete_clicked(" (get rec "id") ")")}]])]
+                [:tr
+                 [:td {:onclick onclick} (get rec "description")]]]])))))
 
 (defn handler-gallery-view [response]
   (let [jsonobj (js->clj (js/JSON.parse response))]
