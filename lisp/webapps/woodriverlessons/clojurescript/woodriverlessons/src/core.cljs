@@ -603,31 +603,34 @@
           [:h5 {:style "text-align: center"} "No results found."]
           :else
           (for [rec results]
-            (let [onclick (cond (get jsonobj "adminP")
-                                (str (namespace ::x) ".on_gallery_modify_clicked(" (get rec "id") ")")
-                                :else
-                                "javascript:void")]
-              [:span {:style "width:720px; height:425px"}
-               [:table
-                [:tr
-                 [:td
-                  (cond (not (= (get rec "video_embed_url") "null"))
-                        [:iframe {:width "720"
-                                  :height "405"
-                                  :src (get rec "video_embed_url")
-                                  :frameborder "0"
-                                  :allow "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                  :referrerpolicy "strict-origin-when-cross-origin"
-                                  :allowfullscreen "allowfullscreen"}]
-                        :else
-                        [:img {:height "405"
-                               :src (str "/gallery/file/view?id=" (get rec "id"))}])]
-                 (when (get jsonobj "adminP")
-                   [:td {:style "text-align:right; vertical-align:top"}
-                    [:img {:src "/static/images/delete.png"
-                           :onclick (str (namespace ::x) ".on_gallery_delete_clicked(" (get rec "id") ")")}]])]
-                [:tr
-                 [:td {:onclick onclick} (get rec "description")]]]])))))
+            [:span {:style "width:720px; height:425px"}
+             [:table
+              [:tr
+               [:td
+                (cond (not (= (get rec "video_embed_url") "null"))
+                      [:iframe {:width "720"
+                                :height "405"
+                                :src (get rec "video_embed_url")
+                                :frameborder "0"
+                                :allow "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                :referrerpolicy "strict-origin-when-cross-origin"
+                                :allowfullscreen "allowfullscreen"}]
+                      :else
+                      [:img {:height "405"
+                             :src (str "/gallery/file/view?id=" (get rec "id"))}])]
+               (when (get jsonobj "adminP")
+                 [:td {:style "text-align:right; vertical-align:top"}
+                  [:img {:src "/static/images/edit.png"
+                         :onclick (str (namespace ::x) ".on_gallery_modify_clicked(" (get rec "id") ")")}]
+                  [:br]
+                  [:img {:src "/static/images/delete.png"
+                         :onclick (str (namespace ::x) ".on_gallery_delete_clicked(" (get rec "id") ")")}]])]
+              [:tr
+               [:td (get rec "description")]]
+              [:tr
+               [:td "&nbsp;"]]
+              [:tr
+               [:td "&nbsp;"]]]]))))
 
 (defn handler-gallery-view [response]
   (let [jsonobj (js->clj (js/JSON.parse response))]
