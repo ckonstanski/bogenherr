@@ -329,7 +329,8 @@
   [:div {:id "content"}]
   [:div {:id "modify"
          :class "modal fade"
-         :role "dialog"}
+         :role "dialog"
+         :tabindex "-1"}
    [:div {:class "modal-dialog modal-lg"}
     [:div {:class "modal-content"}
      [:div {:class "modal-header"}
@@ -472,7 +473,8 @@
   [:div {:id "content"}]
   [:div {:id "modify"
          :class "modal fade"
-         :role "dialog"}
+         :role "dialog"
+         :tabindex "-1"}
    [:div {:class "modal-dialog modal-lg"}
     [:div {:class "modal-content"}
      [:div {:class "modal-header"}
@@ -564,8 +566,9 @@
   [:div {:id "content"}]
   [:div {:id "image"
          :class "modal fade"
-         :role "dialog"}
-   [:div {:class "modal-dialog modal-lg"}
+         :role "dialog"
+         :tabindex "-1"}
+   [:div {:class "modal-dialog modal-lg mw-100 w-75"}
     [:div {:class "modal-content"}
      [:div {:class "modal-header"}
       [:button {:type "button"
@@ -574,7 +577,7 @@
        "&times;"]]
      [:div {:id "image-body"
             :class "modal-body"
-            :style "height: 83vh"}]
+            :style "width: 100%"}]
      [:div {:class "modal-footer"}
       [:button {:type "submit"
                 :class "btn btn-danger btn-default"
@@ -582,8 +585,9 @@
        [:span {:class "glyphicon glyphicon-remove"}]
        "Close"]]]]]
   [:div {:id "modify"
-          :class "modal fade"
-         :role "dialog"}
+         :class "modal fade"
+         :role "dialog"
+         :tabindex "-1"}
    [:div {:class "modal-dialog modal-lg"}
     [:div {:class "modal-content"}
      [:div {:class "modal-header"}
@@ -657,7 +661,7 @@
 
 (hiccups/defhtml template-gallery-image-fullscreen [src]
   [:img {:src src
-         :style "height: 80vh"}])
+         :style "width: 100%"}])
 
 (defn on-gallery-image-clicked [src]
   (dommy/set-html! (dommy/sel1 :#image-body) (template-gallery-image-fullscreen src))
@@ -776,7 +780,8 @@
   [:div {:id "content"}]
   [:div {:id "modify"
          :class "modal fade"
-         :role "dialog"}
+         :role "dialog"
+         :tabindex "-1"}
    [:div {:class "modal-dialog modal-lg"}
     [:div {:class "modal-content"}
      [:div {:class "modal-header"}
@@ -1002,7 +1007,8 @@
   [:div {:id "content"}]
   [:div {:id "modify"
          :class "modal fade"
-         :role "dialog"}
+         :role "dialog"
+         :tabindex "-1"}
    [:div {:class "modal-dialog modal-lg"}
     [:div {:class "modal-content"}
      [:div {:class "modal-header"}
