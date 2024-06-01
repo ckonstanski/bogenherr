@@ -642,7 +642,7 @@
                                 :allowfullscreen "allowfullscreen"}]
                       :else
                       (let [img-src (str "/gallery/file/view?id=" (get rec "id"))]
-                        [:img {:height "405"
+                        [:img {:style "height:405px; cursor:pointer; cursor:hand"
                                :src img-src
                                :onclick (str (namespace ::x) ".on_gallery_image_clicked('" img-src "')")}]))]
                (when (get jsonobj "adminP")
