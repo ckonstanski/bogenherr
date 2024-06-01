@@ -71,6 +71,8 @@
 (declare render-about-us-modify-submit)
 (declare render-gallery)
 (declare template-gallery-view)
+(declare template-gallery-image-fullscreen)
+(declare on-gallery-image-clicked )
 (declare handler-gallery-view)
 (declare render-gallery-view)
 (declare on-gallery-add-clicked)
@@ -560,8 +562,27 @@
 (hiccups/defhtml template-gallery [jsonobj]
   [:h1 {:style "text-align: center"} "Gallery"]
   [:div {:id "content"}]
-  [:div {:id "modify"
+  [:div {:id "image"
          :class "modal fade"
+         :role "dialog"}
+   [:div {:class "modal-dialog modal-lg"}
+    [:div {:class "modal-content"}
+     [:div {:class "modal-header"}
+      [:button {:type "button"
+                :class "close"
+                :data-dismiss "modal"}
+       "&times;"]]
+     [:div {:id "image-body"
+            :class "modal-body"
+            :style "height: 83vh"}]
+     [:div {:class "modal-footer"}
+      [:button {:type "submit"
+                :class "btn btn-danger btn-default"
+                :data-dismiss "modal"}
+       [:span {:class "glyphicon glyphicon-remove"}]
+       "Close"]]]]]
+  [:div {:id "modify"
+          :class "modal fade"
          :role "dialog"}
    [:div {:class "modal-dialog modal-lg"}
     [:div {:class "modal-content"}
@@ -616,8 +637,10 @@
                                 :referrerpolicy "strict-origin-when-cross-origin"
                                 :allowfullscreen "allowfullscreen"}]
                       :else
-                      [:img {:height "405"
-                             :src (str "/gallery/file/view?id=" (get rec "id"))}])]
+                      (let [img-src (str "/gallery/file/view?id=" (get rec "id"))]
+                        [:img {:height "405"
+                               :src img-src
+                               :onclick (str (namespace ::x) ".on_gallery_image_clicked('" img-src "')")}]))]
                (when (get jsonobj "adminP")
                  [:td {:style "text-align:right; vertical-align:top"}
                   [:img {:src "/static/images/edit.png"
@@ -631,6 +654,14 @@
                [:td "&nbsp;"]]
               [:tr
                [:td "&nbsp;"]]]]))))
+
+(hiccups/defhtml template-gallery-image-fullscreen [src]
+  [:img {:src src
+         :style "height: 80vh"}])
+
+(defn on-gallery-image-clicked [src]
+  (dommy/set-html! (dommy/sel1 :#image-body) (template-gallery-image-fullscreen src))
+  (.modal (jquery "#image")))
 
 (defn handler-gallery-view [response]
   (let [jsonobj (js->clj (js/JSON.parse response))]
