@@ -24,6 +24,7 @@ hr {
 .nav-link {
     color: white;
     cursor: pointer;
+    cursor: hand;
 }
 
 .well {
