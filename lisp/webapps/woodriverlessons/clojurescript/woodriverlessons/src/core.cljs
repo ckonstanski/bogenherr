@@ -250,7 +250,7 @@
 ;; home
 
 (hiccups/defhtml template-home [jsonobj]
-  [:h1 {:style "text-align: center"} "Carlos Konstanski welcomes you to his violin and viola studio!"]
+  [:h1 {:style "text-align: center"} "Welcome to the studio of Carlos Konstanski"]
   [:div {:style "text-align: center"}
    [:img {:style "width: 100%"
           :src "/static/images/instrument-cabinet.jpg"}]])
