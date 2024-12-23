@@ -1,4 +1,4 @@
-(defproject woodriverlessons "0.1.0-SNAPSHOT"
+(defproject bogenherr "0.1.0-SNAPSHOT"
   :description "FIXME"
   :url "FIXME"
   :license "public domain"

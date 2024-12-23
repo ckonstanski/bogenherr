@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 (declaim (optimize (speed 0) (safety 3) (debug 3)))
 
-(in-package :woodriverlessons)
+(in-package :bogenherr)
 
 (defclass about-us-service (rest-service)
   ()
@@ -26,7 +26,7 @@
     (with-valid-user (user "about-us-modify")
         (setf (admin-p instance) nil)
       (setf (admin-p instance) t))
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let* ((general-pkg (make-instance 'general-pkg))
              (about-us (get-about-us general-pkg)))
         (when about-us
@@ -42,7 +42,7 @@
 
 (defun about-us-modify-json ()
   (with-auth (instance about-us/modify-service "about-us-modify")
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let* ((general-pkg (make-instance 'general-pkg))
              (about-us (get-about-us general-pkg)))
         (setf (form instance) (make-form "about-us-modify-form"
@@ -53,7 +53,7 @@
 
 (defun about-us-modify-submit-json (content)
   (with-auth (instance about-us/modify-service "about-us-modify")
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let* ((general-pkg (make-instance 'general-pkg))
              (about-us (get-about-us general-pkg)))
         (when about-us

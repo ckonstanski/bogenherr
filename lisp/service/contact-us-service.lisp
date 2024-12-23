@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 (declaim (optimize (speed 0) (safety 3) (debug 3)))
 
-(in-package :woodriverlessons)
+(in-package :bogenherr)
 
 (defclass contact-us-service (rest-service)
   ()
@@ -43,7 +43,7 @@
 (defun contact-us-email-json (first_name last_name email phone comments)
   (declare (special first_name last_name email phone comments))
   (with-noauth (instance contact-us/email-service)
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let ((contact-pkg (make-instance 'contact-pkg))
             (contact-us-post (make-instance 'contact-us-post)))
         (loop for param in (sb-introspect:function-lambda-list #'contact-us-email-json)

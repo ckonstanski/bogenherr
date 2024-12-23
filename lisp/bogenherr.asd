@@ -3,8 +3,8 @@
 
 (in-package :cl)
 
-(defpackage :woodriverlessons-system (:use :cl :asdf))
-(in-package :woodriverlessons-system)
+(defpackage :bogenherr-system (:use :cl :asdf))
+(in-package :bogenherr-system)
 
 (defmacro do-defsystem (&key name version maintainer author description long-description depends-on components)
   `(defsystem ,name
@@ -24,12 +24,12 @@
 (loop for pkg in *quicklisp-packages* do
   (ql:quickload (symbol-name pkg)))
 
-(do-defsystem :name "woodriverlessons"
+(do-defsystem :name "bogenherr"
   :version "1"
   :maintainer "Carlos Konstanski <me@ckons.org>"
   :author "Carlos Konstanski <me@ckons.org>"
-  :description "woodriverlessons"
-  :long-description "woodriverlessons is a web application written in Common Lisp based on the Hunchentoot web server. The client-side code is written in ClojureScript. Purpose: public website for Violin and Viola Lessons in the Wood River Valley."
+  :description "bogenherr"
+  :long-description "bogenherr is a web application written in Common Lisp based on the Hunchentoot web server. The client-side code is written in ClojureScript. Purpose: public website for Violin and Viola Lessons in Pocatello ID."
   :depends-on *all-packages*
   :components ((:module core
                 :components ((:file "core")))
@@ -72,6 +72,6 @@
                 :depends-on (service)
                 :components ((:file "generics")
                              (:file "webapp-loader" :depends-on ("generics"))
-                             (:module woodriverlessons
+                             (:module bogenherr
                               :depends-on ("webapp-loader")
                               :components ((:file "site")))))))

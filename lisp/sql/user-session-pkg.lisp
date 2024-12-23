@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 (declaim (optimize (speed 0) (safety 3) (debug 3)))
 
-(in-package :woodriverlessons)
+(in-package :bogenherr)
 
 (defclass user-session-pkg (record-pkg)
   ()
@@ -42,7 +42,7 @@
 (defun get-session-object (session-key)
   "Returns the object stored in the user session under the given
 `session-key'."
-  (with-woodriverlessons-database
+  (with-bogenherr-database
     (let* ((user-session-pkg (make-instance 'user-session-pkg))
            (user-session-object (get-user-session-object user-session-pkg session-key))
            object)
@@ -55,7 +55,7 @@
   "Sets the object into the user-session under the given
 `session-key'. Will not write anything if the session given by
 `*sessionid*' does not exist."
-  (with-woodriverlessons-database
+  (with-bogenherr-database
     (let* ((user-session-pkg (make-instance 'user-session-pkg))
            (user-session-object (get-user-session-object user-session-pkg session-key)))
       (if user-session-object
@@ -75,14 +75,14 @@
 (defun flush-session-object (session-key)
   "Removes the object from the user session under the given
 `session-key'."
-  (with-woodriverlessons-database
+  (with-bogenherr-database
     (let ((user-session-pkg (make-instance 'user-session-pkg)))
       (flush-user-session-object user-session-pkg *sessionid* session-key))))
 
 (defun ensure-user-session-exists (&optional force-new-sessionid-p)
   "Ensures that the user has a valid sessionid cookie. Returns the
 `sessionid'. If the session does exist, update its timestamp."
-  (with-woodriverlessons-database
+  (with-bogenherr-database
     (let* ((user-session-pkg (make-instance 'user-session-pkg))
            (sessionid (when (not force-new-sessionid-p)
                         (org-ckons-session::get-sessionid-from-request)))
@@ -100,7 +100,7 @@ inactive for a period of time determined by the `*session-timeout*'
 variable."
   (when (> (- (get-universal-time) org-ckons-session::*gc-last-cycle-timestamp*) org-ckons-session::*gc-interval*)
     (setf org-ckons-session::*gc-last-cycle-timestamp* (get-universal-time))
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let ((user-session-pkg (make-instance 'user-session-pkg)))
         (loop for user-session in (get-user-sessions user-session-pkg) do
              (let ((inactive-time (- org-ckons-session::*gc-last-cycle-timestamp* (datetime user-session))))

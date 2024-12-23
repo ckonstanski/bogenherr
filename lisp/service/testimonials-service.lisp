@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 (declaim (optimize (speed 0) (safety 3) (debug 3)))
 
-(in-package :woodriverlessons)
+(in-package :bogenherr)
 
 (defclass testimonials-service (rest-service)
   ((title :initarg :title
@@ -31,7 +31,7 @@
     (with-valid-user (user "testimonials-modify")
         (setf (admin-p instance) nil)
       (setf (admin-p instance) t))
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let* ((general-pkg (make-instance 'general-pkg))
              (testimonials (get-testimonials general-pkg)))
         (when testimonials
@@ -44,7 +44,7 @@
 (defun testimonials-modify-json ()
   (with-auth (instance testimonials/modify-service "testimonials-modify")
     (setf (title instance) "Testimonials - Modify")
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let* ((general-pkg (make-instance 'general-pkg))
              (testimonials (get-testimonials general-pkg))
              content)
@@ -59,7 +59,7 @@
 (defun testimonials-modify-submit-json (content)
   (with-auth (instance testimonials/modify-service "testimonials-modify")
     (setf (title instance) "Testimonials - Modify")
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let* ((general-pkg (make-instance 'general-pkg))
              (testimonials (get-testimonials general-pkg)))
         (when testimonials

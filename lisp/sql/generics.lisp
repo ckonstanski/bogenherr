@@ -1,10 +1,10 @@
 ;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 (declaim (optimize (speed 0) (safety 3) (debug 3)))
 
-(in-package :woodriverlessons)
+(in-package :bogenherr)
 
-(defmacro with-woodriverlessons-database (&body body)
-  `(with-database (getf (databases *webapp*) :db-woodriverlessons) ,@body))
+(defmacro with-bogenherr-database (&body body)
+  `(with-database (getf (databases *webapp*) :db-bogenherr) ,@body))
 
 (defgeneric insert-user (auth-pkg user)
   (:documentation "Inserts a new user into the database."))

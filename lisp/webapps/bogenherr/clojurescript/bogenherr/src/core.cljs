@@ -1,4 +1,4 @@
-(ns woodriverlessons.core
+(ns bogenherr.core
   (:require-macros [hiccups.core :as hiccups :refer [html]])
   (:require [ajax.core :refer [GET POST raw-response-format]]
             [dommy.core :as dommy]
@@ -250,7 +250,7 @@
 ;; home
 
 (hiccups/defhtml template-home [jsonobj]
-  [:h1 {:style "text-align: center"} "Welcome to the studio of Carlos Konstanski"]
+  [:h1 {:style "text-align: center"} "Welcome to the music studio of Carlos Konstanski<br/>a.k.a. <i>der Bogenherr</i>"]
   [:div {:style "text-align: center"}
    [:img {:style "width: 100%"
           :src "/static/images/instrument-cabinet.jpg"}]])

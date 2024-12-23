@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 (declaim (optimize (speed 0) (safety 3) (debug 3)))
 
-(in-package :woodriverlessons)
+(in-package :bogenherr)
 
 (defparameter *menu-config* '((:id "a_menu_home" :label "Home" :handler "/home" :permissions "_Public")
                               (:id "a_menu_about_us" :label "About the Studio" :handler "/about-us" :permissions "_Public")
@@ -53,7 +53,7 @@
   (:documentation ""))
 
 (defmethod initialize-instance :after ((menu-service menu-service) &key user menu-config)
-  (with-woodriverlessons-database
+  (with-bogenherr-database
     (let ((auth-pkg (make-instance 'auth-pkg))
           (user-logged-in-p (and user (not (= (id user) 0))))
           roles)

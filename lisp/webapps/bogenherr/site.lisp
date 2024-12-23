@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 (declaim (optimize (speed 0) (safety 3) (debug 3)))
 
-(in-package :woodriverlessons)
+(in-package :bogenherr)
 
 (defmacro .base (&optional (onload-fn "goto_location('/home')"))
   `(org-ckons-http::html5
@@ -18,12 +18,12 @@
                    `((script :type "text/javascript" :src ,(getf js :src) :integrity ,(getf js :integrity) :crossorigin ,(getf js :crossorigin))))
                  '((:src "https://code.jquery.com/jquery-3.7.1.slim.min.js" :integrity "ha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" :crossorigin "anonymous")))
        ((script :type "text/javascript" :src "/static/js/cljs/main.js")))
-      ((body :onload ,(format nil "woodriverlessons.core.~a" ,onload-fn))
+      ((body :onload ,(format nil "bogenherr.core.~a" ,onload-fn))
        ((div :class "container-fluid")
         ((div :class "banner")
          ((table :width "100%" :height "100%")
           (tr
-           ((td :class "banner-title") "Wood River Lessons")
+           ((td :class "banner-title") "Bogen-<i>Herr</i>")
            ((td :class "banner-menu")
             ((div :id "menu-user"))))))
         ((div :id "menu" :class "well"))

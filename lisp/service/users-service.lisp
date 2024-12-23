@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 (declaim (optimize (speed 0) (safety 3) (debug 3)))
 
-(in-package :woodriverlessons)
+(in-package :bogenherr)
 
 (defclass users-service (auth-service)
   ((title :initarg :title
@@ -22,7 +22,7 @@
 
 (defun users-view-json ()
   (with-auth (instance users/view-service "users-view")
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let ((auth-pkg (make-instance 'auth-pkg)))
         (setf (users instance) (get-all-users auth-pkg))))
     (sanitize-rest-json instance)
@@ -51,7 +51,7 @@
 (defun users-add-json ()
   (with-auth (instance users/add-service "users-modify")
     (setf (title instance) "Users - Add")
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let* ((auth-pkg (make-instance 'auth-pkg))
              (user (get-user))
              (role-groups (get-all-role-groups auth-pkg user)))
@@ -67,7 +67,7 @@
 (defun users-add-submit-json (role_groups first_name last_name email)
   (declare (special role_groups first_name last_name email))
   (with-auth (instance users/add-service "users-modify")
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let ((registration (make-instance 'registration)))
         (loop for param in (sb-introspect:function-lambda-list #'users-add-submit-json) do
              (setf (slot-value registration param) (symbol-value param)))
@@ -140,7 +140,7 @@
 
 (defun users-register-form-json (hash)
   (with-noauth (instance users/register/form-service)
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let* ((auth-pkg (make-instance 'auth-pkg))
              (registration (get-registration-by-hash auth-pkg hash)))
         (registrations-gc auth-pkg)
@@ -165,7 +165,7 @@
 
 (defun users-register-submit-json (hash username pwd pwd2 phone)
   (with-noauth (instance users/register/submit-service)
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let ((auth-pkg (make-instance 'auth-pkg))
             registration)
         (registrations-gc auth-pkg)
@@ -202,7 +202,7 @@
 (defun users-modify-json (id)
   (with-auth (instance users/modify-service "users-modify")
     (setf (title instance) "Users - Modify")
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let* ((auth-pkg (make-instance 'auth-pkg))
              (me (get-user))
              (user (get-user-by-id auth-pkg id))
@@ -225,7 +225,7 @@
 (defun users-modify-submit-json (id role_groups username first_name last_name email phone)
   (declare (special role_groups username first_name last_name email phone))
   (with-auth (instance users/modify-service "users-modify")
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let* ((auth-pkg (make-instance 'auth-pkg))
              (user (get-active-user-by-id auth-pkg id)))
         (if user
@@ -251,7 +251,7 @@
 
 (defun users-toggle-active-json (id)
   (with-auth (instance users/toggle-service "users-modify")
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let* ((auth-pkg (make-instance 'auth-pkg))
              (user (get-user-by-id auth-pkg id)))
         (if user
@@ -269,7 +269,7 @@
 
 (defun users-delete-json (id)
   (with-auth (instance users/delete-service "users-modify")
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let* ((auth-pkg (make-instance 'auth-pkg))
              (user (get-user-by-id auth-pkg id)))
         (if user

@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 (declaim (optimize (speed 0) (safety 3) (debug 3)))
 
-(in-package :woodriverlessons)
+(in-package :bogenherr)
 
 (defclass profile-service (auth-service user)
   ((title :initarg :title
@@ -46,7 +46,7 @@
 (defun profile-modify-submit-json (id username first_name last_name email phone)
   (declare (special username first_name last_name email phone))
   (with-auth (instance profile/modify-service "profile-modify")
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let ((user (get-user)))
         (if (= id (id user))
             (let ((auth-pkg (make-instance 'auth-pkg)))

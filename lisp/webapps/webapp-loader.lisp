@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 (declaim (optimize (speed 0) (safety 3) (debug 3)))
 
-(in-package :woodriverlessons)
+(in-package :bogenherr)
 
 (defvar *acceptor* nil)
 (defvar *dispatch-table* '(#'dispatch-easy-handlers #'default-dispatcher))
@@ -138,7 +138,7 @@ with the new one."
                                       :mail-authentication (getf form :mail-authentication)
                                       :mail-ssl (getf form :mail-ssl)))))))
 
-(defun woodriverlessons ()
+(defun bogenherr ()
   "Call this to start the server."
   (when (null *acceptor*)
     (let ((package (string-downcase (package-name #.*package*))))

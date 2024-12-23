@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 (declaim (optimize (speed 0) (safety 3) (debug 3)))
 
-(in-package :woodriverlessons)
+(in-package :bogenherr)
 
 (defclass gallery-service (auth-service)
   ((admin-p :initarg :admin-p
@@ -27,7 +27,7 @@
     (with-valid-user (user "gallery-modify")
         (setf (admin-p instance) nil)
       (setf (admin-p instance) t))
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let ((general-pkg (make-instance 'general-pkg)))
         (setf (results instance) (get-galleries general-pkg))))
     (setf (message instance) (session-value :message))
@@ -54,7 +54,7 @@
 (defun gallery-add-submit-json (description video_embed_url upload)
   (declare (special description video_embed_url))
   (with-auth (instance gallery/add-modify-delete-service "gallery-modify")
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let ((general-pkg (make-instance 'general-pkg))
             (gallery (make-instance 'gallery))
             (tmp-filepath (first upload))
@@ -65,7 +65,7 @@
                                       (sb-introspect:function-lambda-list #'gallery-add-submit-json))
               do (setf (slot-value gallery param) (symbol-value param)))
         (when upload
-          (let ((tmpdir (tmpdir:mkdtemp :prefix "woodriverlessons-gallery-")))
+          (let ((tmpdir (tmpdir:mkdtemp :prefix "bogenherr-gallery-")))
             (setf new-filepath (format nil "~a~a" tmpdir (file-namestring tmp-filepath)))
             (fad:copy-file tmp-filepath new-filepath)
             (setf (filename gallery) orig-filename)
@@ -76,7 +76,7 @@
 
 (defun gallery-modify-json (id)
   (with-auth (instance gallery/add-modify-delete-service "gallery-modify")
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let* ((general-pkg (make-instance 'general-pkg))
              (gallery (get-gallery general-pkg id)))
         (if gallery
@@ -93,7 +93,7 @@
 (defun gallery-modify-submit-json (id description video_embed_url upload)
   (declare (special description video_embed_url))
   (with-auth (instance gallery/add-modify-delete-service "gallery-modify")
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let* ((general-pkg (make-instance 'general-pkg))
             (gallery (get-gallery general-pkg id)))
         (if gallery
@@ -105,7 +105,7 @@
                                             (sb-introspect:function-lambda-list #'gallery-add-submit-json))
                     do (setf (slot-value gallery param) (symbol-value param)))
               (when upload
-                (let ((tmpdir (tmpdir:mkdtemp :prefix "woodriverlessons-gallery-")))
+                (let ((tmpdir (tmpdir:mkdtemp :prefix "bogenherr-gallery-")))
                   (setf new-filepath (format nil "~a~a" tmpdir (file-namestring tmp-filepath)))
                   (fad:copy-file tmp-filepath new-filepath)
                   (setf (filename gallery) orig-filename)
@@ -117,7 +117,7 @@
 
 (defun gallery-delete-json (id)
   (with-auth (instance gallery/add-modify-delete-service "gallery-modify")
-    (with-woodriverlessons-database
+    (with-bogenherr-database
         (let* ((general-pkg (make-instance 'general-pkg))
                (gallery (get-gallery general-pkg id)))
           (if gallery
@@ -128,7 +128,7 @@
 
 (defun gallery-file-view (id)
   (with-noauth-raw (instance gallery/view-service)
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let* ((general-pkg (make-instance 'general-pkg))
              (gallery (get-gallery general-pkg id)))
         (when gallery

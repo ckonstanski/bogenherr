@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 (declaim (optimize (speed 0) (safety 3) (debug 3)))
 
-(in-package :woodriverlessons)
+(in-package :bogenherr)
 
 (defparameter *authenticated-user-session-key* "authenticated-user")
 
@@ -165,7 +165,7 @@
      (if ,session-name
          (let* ((auth-pkg (make-instance 'auth-pkg))
                 (has-all-roles-p (let ((has-all-roles-p t))
-                                   (with-woodriverlessons-database
+                                   (with-bogenherr-database
                                      (loop for role in (if (listp ,roles) ,roles (list ,roles)) do
                                           (when (not (has-role auth-pkg ,session-name role))
                                             (setf has-all-roles-p nil)))

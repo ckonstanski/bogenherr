@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 (declaim (optimize (speed 0) (safety 3) (debug 3)))
 
-(in-package :woodriverlessons)
+(in-package :bogenherr)
 
 (defclass login-service (rest-service)
   ((form :initarg :form
@@ -50,7 +50,7 @@
     (if (or (org-ckons-core::null-or-empty-p username)
             (org-ckons-core::null-or-empty-p pwd))
         (setf (session-value :errormsg) "Login failed.")
-        (with-woodriverlessons-database
+        (with-bogenherr-database
           (let* ((auth-pkg (make-instance 'auth-pkg))
                  (user (get-active-user-by-username-pwd auth-pkg username pwd)))
             (cond (user

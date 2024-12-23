@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 (declaim (optimize (speed 0) (safety 3) (debug 3)))
 
-(in-package :woodriverlessons)
+(in-package :bogenherr)
 
 (defclass messages-service (auth-service)
   ((title :initarg :title
@@ -32,7 +32,7 @@
 (defun messages-results-json (read)
   (with-auth (instance messages/results-service "messages-view")
     (when read (setf (session-value :messages-read) read))
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let ((contact-pkg (make-instance 'contact-pkg)))
         (setf (results instance) (get-contact-us-posts contact-pkg
                                                        (id (get-user))
@@ -47,7 +47,7 @@
 
 (defun messages-mark-json (read id)
   (with-auth (instance messages/mark-service "messages-view")
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (handler-case
           (let ((contact-pkg (make-instance 'contact-pkg)))
             (mark-contact-us-post contact-pkg id (id (get-user)) (string= read "read"))

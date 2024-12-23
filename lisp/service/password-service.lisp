@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 (declaim (optimize (speed 0) (safety 3) (debug 3)))
 
-(in-package :woodriverlessons)
+(in-package :bogenherr)
 
 (defclass password-service (auth-service user)
   ((form :initarg :form
@@ -35,7 +35,7 @@
   (declare (special pwd pwd2))
   (with-auth (instance password/modify-service "profile-modify")
     (setf (title instance) "Change Password")
-    (with-woodriverlessons-database
+    (with-bogenherr-database
       (let ((user (get-user)))
         (if (and (= id (id user))
                  (string= pwd pwd2))
