@@ -7,6 +7,10 @@ p {
     font-size: 14px;
 }
 
+li {
+    font-size: 14px;
+}
+
 hr {
     border: 1px #ffd081 solid;
     width: 200px;
