@@ -11,6 +11,6 @@ pom.xml.asc
 .rebel_readline_history
 .hgignore
 .hg
-profiles.clj
+figwheel-main.edn
 figwheel_server.log
 .rebel_readline_history
