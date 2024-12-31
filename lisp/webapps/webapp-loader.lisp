@@ -158,9 +158,7 @@ with the new one."
        (let* ((*webapp* (get-webapp ,package))
               (*uri* ,uri)
               (*header-register* (make-instance 'org-ckons-session::header-register))
-              (*sessionid* (progn
-                             (run-garbage-collect-cycle)
-                             (ensure-user-session-exists))))
+              (*sessionid* (ensure-user-session-exists)))
          (ensure-user-exists)
          (setf output (,page-function ,@args))
          (org-ckons-session::ship-headers *header-register*))
