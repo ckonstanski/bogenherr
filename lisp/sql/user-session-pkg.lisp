@@ -3,6 +3,8 @@
 
 (in-package :bogenherr)
 
+(defvar *user-session-mutex* (sb-thread:make-mutex :name "*user-session-mutex*"))
+
 (defclass user-session-pkg (record-pkg)
   ()
   (:documentation "Database-backed user session API."))
@@ -82,31 +84,33 @@
 (defun ensure-user-session-exists (&optional force-new-sessionid-p)
   "Ensures that the user has a valid sessionid cookie. Returns the
 `sessionid'. If the session does exist, update its timestamp."
-  (with-bogenherr-database
-    (let* ((user-session-pkg (make-instance 'user-session-pkg))
-           (sessionid (when (not force-new-sessionid-p)
-                        (org-ckons-session::get-sessionid-from-request)))
-           (user-session (get-user-session user-session-pkg sessionid)))
-      (if user-session
-          (update-timestamp user-session-pkg user-session)
-          (progn
-            (setf sessionid (create-user-session user-session-pkg))
-            (org-ckons-session::set-sessionid-cookie *header-register* sessionid)))
-      sessionid)))
+  (sb-thread:with-mutex (*user-session-mutex*)
+    (with-bogenherr-database
+      (let* ((user-session-pkg (make-instance 'user-session-pkg))
+             (sessionid (when (not force-new-sessionid-p)
+                          (org-ckons-session::get-sessionid-from-request)))
+             (user-session (get-user-session user-session-pkg sessionid)))
+        (if user-session
+            (update-timestamp user-session-pkg user-session)
+            (progn
+              (setf sessionid (create-user-session user-session-pkg))
+              (org-ckons-session::set-sessionid-cookie *header-register* sessionid)))
+        sessionid))))
 
 (defun run-garbage-collect-cycle ()
   "Goes through all the user sessions, expiring any that have remained
 inactive for a period of time determined by the `*session-timeout*'
 variable."
-  (when (> (- (get-universal-time) org-ckons-session::*gc-last-cycle-timestamp*) org-ckons-session::*gc-interval*)
-    (setf org-ckons-session::*gc-last-cycle-timestamp* (get-universal-time))
-    (with-bogenherr-database
-      (let ((user-session-pkg (make-instance 'user-session-pkg)))
-        (loop for user-session in (get-user-sessions user-session-pkg) do
-             (let ((inactive-time (- org-ckons-session::*gc-last-cycle-timestamp* (datetime user-session))))
-               (when (and (> inactive-time org-ckons-session::*session-timeout*)
-                          (sessionid user-session))
-                 (org-ckons-core::logger (format nil "Deleting expired session: id = [~a] ; sessionid = [~a]" (id user-session) (sessionid user-session)))
-                 (loop for user-session-object in (get-user-session-objects user-session-pkg user-session) do
-                      (delete-record user-session-pkg user-session-object))
-                 (delete-record user-session-pkg user-session))))))))
+  (sb-thread:with-mutex (*user-session-mutex*)
+    (when (> (- (get-universal-time) org-ckons-session::*gc-last-cycle-timestamp*) org-ckons-session::*gc-interval*)
+      (setf org-ckons-session::*gc-last-cycle-timestamp* (get-universal-time))
+      (with-bogenherr-database
+        (let ((user-session-pkg (make-instance 'user-session-pkg)))
+          (loop for user-session in (get-user-sessions user-session-pkg) do
+            (let ((inactive-time (- org-ckons-session::*gc-last-cycle-timestamp* (datetime user-session))))
+              (when (and (> inactive-time org-ckons-session::*session-timeout*)
+                         (sessionid user-session))
+                (org-ckons-core::logger (format nil "Deleting expired session: id = [~a] ; sessionid = [~a]" (id user-session) (sessionid user-session)))
+                (loop for user-session-object in (get-user-session-objects user-session-pkg user-session) do
+                  (delete-record user-session-pkg user-session-object))
+                (delete-record user-session-pkg user-session)))))))))

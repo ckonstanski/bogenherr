@@ -193,8 +193,8 @@ even if it's just a guest user."
       (set-user user))))
 
 (defun get-user ()
-  "Convenience function for getting the `authenticated-user' from user
-session."
+  "Convenience function for getting the `authenticated-user' from the
+user session."
   (get-session-object *authenticated-user-session-key*))
 
 (defun set-user (user)
