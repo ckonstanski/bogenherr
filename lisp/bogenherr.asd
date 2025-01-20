@@ -17,7 +17,7 @@
      :depends-on ,(eval depends-on)
      :components ,components))
 
-(defparameter *quicklisp-packages* '(cl-ppcre cl-smtp hunchentoot cl-log ironclad cl-markdown tmpdir))
+(defparameter *quicklisp-packages* '(cl-ppcre cl-smtp hunchentoot cl-log ironclad cl-markdown tmpdir net-telent-date uffi drakma cl-json postmodern fiveam local-time trivial-octet-streams))
 (defparameter *asdf-packages* '(org-ckons-core org-ckons-http org-ckons-json org-ckons-file org-ckons-serializable org-ckons-session org-ckons-condition org-ckons-sql))
 (defparameter *all-packages* (append *quicklisp-packages* *asdf-packages*))
 
