@@ -23,9 +23,11 @@
         ((div :class "banner")
          ((table :width "100%" :height "100%")
           (tr
+           ((td :class "banner-menu")
+            ((div :id "menu-user")))
            ((td :class "banner-title") "Bogen-<i>Herr</i>")
            ((td :class "banner-menu")
-            ((div :id "menu-user"))))))
+            "&nbsp;"))))
         ((div :id "menu" :class "well"))
         ((div :id "location" :style "display: none"))
         ((div :id "errormsg"))
