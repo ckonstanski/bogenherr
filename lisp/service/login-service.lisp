@@ -22,7 +22,7 @@
                                         nil
                                         t
                                         '((:name "username" :label "Username" :field-type "text" :required "required")
-                                          (:name "pwd" :label "Passworda" :field-type "password" :required "required")
+                                          (:name "pwd" :label "Password" :field-type "password" :required "required")
                                           (:label "Login" :field-type "button" :onclick "on_login_submit_clicked()")))))
 
 (defmethod initialize-instance :after ((login-forgot-service login-forgot-service) &key)
