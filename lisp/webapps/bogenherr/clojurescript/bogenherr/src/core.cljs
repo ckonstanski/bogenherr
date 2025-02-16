@@ -893,10 +893,13 @@
 (defn render-contact-us-view []
   (GET "/contact-us/view" {:handler handler-contact-us-view}))
 
-;; contact-us-email
+;; contact-us-submit
 
 (defn on-contact-us-email-submit-clicked []
-  (render-contact-us-email-submit))
+  (when (-> (jquery "#contact-us-form")
+            (.get "0")
+            (.checkValidity))
+    (render-contact-us-email-submit)))
 
 (defn handler-contact-us-email-submit [response]
   (on-menu-clicked "/contact-us"))
