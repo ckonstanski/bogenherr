@@ -252,7 +252,7 @@
 (hiccups/defhtml template-home [jsonobj]
   [:h2 {:style "text-align: center"} "Welcome To Carlos Konstanski's Music Studio"]
   [:h3 {:style "text-align: center"}
-   [:i "a.k.a. der Bogenherr<br/>a.k.a Dr. Divertimento"]]
+   [:i "a.k.a. der Bogenherr<br/>a.k.a. Dr. Divertimento"]]
   [:h2 {:style "text-align: center"} "Study the Violin, Viola and Viola d'Amore With Me!"]
   [:div {:style "text-align: center"}
    [:img {:style "width: 100%"
