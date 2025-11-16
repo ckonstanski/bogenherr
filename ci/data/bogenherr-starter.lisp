@@ -1,0 +1,7 @@
+(load "/etc/sbclrc")
+(asdf:operate 'asdf:load-op 'swank)
+(setf swank::*loopback-interface* "0.0.0.0")
+(swank:create-server :port 4110 :dont-close t)
+(asdf:operate 'asdf:load-op 'bogenherr)
+(in-package :bogenherr)
+(bogenherr)
