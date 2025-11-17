@@ -16,9 +16,6 @@ services:
       #   source: /tmp/bogenherr
       #   target: /tmp/bogenherr
       - type: bind
-        source: ${OLO_PROJECT_HOME}
-        target: ${OLO_PROJECT_HOME}
-      - type: bind
         source: ~/.m2
         target: /home/${OLO_USERNAME}/.m2
       - type: bind
@@ -31,26 +28,11 @@ services:
         source: ~/.vimrc
         target: /home/${OLO_USERNAME}/.vimrc
       - type: bind
-        source: ~/.emacs.d
-        target: /home/${OLO_USERNAME}/.emacs.d
-      - type: bind
         source: ~/.gitconfig
         target: /home/${OLO_USERNAME}/.gitconfig
       - type: bind
         source: ~/.ssh
         target: /home/${OLO_USERNAME}/.ssh
-      - type: bind
-        source: ~/.password-store
-        target: /home/${OLO_USERNAME}/.password-store
-      - type: bind
-        source: ~/.gnupg
-        target: /home/${OLO_USERNAME}/.gnupg
-      - type: bind
-        source: /run/user/${OLO_UID}
-        target: /run/user/${OLO_UID}
-      - type: bind
-        source: /run/user/${OLO_UID}/gnupg/S.gpg-agent
-        target: /home/${OLO_USERNAME}/.gnupg/S.gpg-agent
       - type: bind
         source: /etc/hosts
         target: /etc/hosts
@@ -62,10 +44,8 @@ services:
         target: /var/log/lisp
     environment:
       - TERM=xterm-256color
-      - AWS_SDK_LOAD_CONFIG=1
       - https_proxy=${https_proxy}
       - http_proxy=${http_proxy}
       - no_proxy=${no_proxy}
       - GITHUB_TOKEN=${GITHUB_TOKEN}
-      - GPG_AGENT_INFO=/home/${OLO_USERNAME}/.gnupg/S.gpg-agent:0:1
-    command: [ "/bin/bash -l -c" ]
+     command: [ "/bin/bash -l -c" ]
