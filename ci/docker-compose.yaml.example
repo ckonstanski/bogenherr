@@ -1,3 +1,6 @@
+---
+name: bogenherr
+
 services:
   bogenherr:
     image: bogenherr:v0.1
@@ -45,4 +48,3 @@ services:
       - http_proxy=${http_proxy}
       - no_proxy=${no_proxy}
       - GITHUB_TOKEN=${GITHUB_TOKEN}
-     command: [ "/bin/bash -l -c" ]
