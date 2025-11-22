@@ -15,10 +15,12 @@ docker stop ${container} || true
 docker container prune -f
 docker rmi --force ${container}
 
-DOCKER_BUILDKIT=0 docker compose --ansi "never" build \
+DOCKER_BUILDKIT=0 docker compose \
+    --progress "plain" \
+    --ansi "never" \
+    build \
     --no-cache \
-    --pull \
-    --progress "plain"
+    --pull
 
 popd 2>/dev/null
 rm -rf tmp

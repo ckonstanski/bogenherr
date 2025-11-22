@@ -12,9 +12,6 @@ services:
     network_mode: "host"
     container_name: bogenherr
     volumes:
-      # - type: bind
-      #   source: /tmp/bogenherr
-      #   target: /tmp/bogenherr
       - type: bind
         source: ~/.m2
         target: /home/${OLO_USERNAME}/.m2
