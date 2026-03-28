@@ -106,11 +106,11 @@ variable."
     (setf org-ckons-session::*gc-last-cycle-timestamp* (get-universal-time))
     (with-bogenherr-database
       (let ((user-session-pkg (make-instance 'user-session-pkg)))
-        (loop for user-session in (get-user-sessions user-session-pkg) do
-          (let ((inactive-time (- org-ckons-session::*gc-last-cycle-timestamp* (datetime user-session))))
-            (when (and (> inactive-time org-ckons-session::*session-timeout*)
-                       (sessionid user-session))
-              (org-ckons-core::logger (format nil "Deleting expired session: id = [~a] ; sessionid = [~a]" (id user-session) (sessionid user-session)))
-              (loop for user-session-object in (get-user-session-objects user-session-pkg user-session) do
-                (delete-record user-session-pkg user-session-object))
-              (delete-record user-session-pkg user-session))))))))
+        (loop for user-session in (get-user-sessions user-session-pkg)
+              do (let ((inactive-time (- org-ckons-session::*gc-last-cycle-timestamp* (datetime user-session))))
+                   (when (and (> inactive-time org-ckons-session::*session-timeout*)
+                              (sessionid user-session))
+                     (org-ckons-core::logger (format nil "Deleting expired session: id = [~a] ; sessionid = [~a]" (id user-session) (sessionid user-session)))
+                     (loop for user-session-object in (get-user-session-objects user-session-pkg user-session)
+                           do (delete-record user-session-pkg user-session-object))
+                     (delete-record user-session-pkg user-session))))))))

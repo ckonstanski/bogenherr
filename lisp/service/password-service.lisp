@@ -42,8 +42,8 @@
             (let ((auth-pkg (make-instance 'auth-pkg)))
               (loop for param in (remove-if (lambda (x)
                                               (intersection `(,x) '(id pwd2)))
-                                            (sb-introspect:function-lambda-list #'password-submit-json)) do
-                   (setf (slot-value user param) (symbol-value param)))
+                                            (sb-introspect:function-lambda-list #'password-submit-json))
+                    do (setf (slot-value user param) (symbol-value param)))
               (update-password auth-pkg user)
               (set-user user)
               (setf (session-value :message) "Password saved successfully."))

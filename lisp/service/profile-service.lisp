@@ -48,12 +48,12 @@
   (with-auth (instance profile/modify-service "profile-modify")
     (with-bogenherr-database
       (let ((user (get-user)))
-        (if (= id (id user))
+        (if (= (id user) id)
             (let ((auth-pkg (make-instance 'auth-pkg)))
               (loop for param in (remove-if (lambda (x)
                                               (intersection `(,x) '(id)))
-                                            (sb-introspect:function-lambda-list #'profile-modify-submit-json)) do
-                   (setf (slot-value user param) (symbol-value param)))
+                                            (sb-introspect:function-lambda-list #'profile-modify-submit-json))
+                    do (setf (slot-value user param) (symbol-value param)))
               (copy-from-record instance user)
               (update-user auth-pkg user)
               (set-user user)

@@ -21,8 +21,8 @@
 (defparameter *asdf-packages* '(org-ckons-core org-ckons-http org-ckons-json org-ckons-file org-ckons-serializable org-ckons-session org-ckons-condition org-ckons-sql))
 (defparameter *all-packages* (append *quicklisp-packages* *asdf-packages*))
 
-(loop for pkg in *quicklisp-packages* do
-  (ql:quickload (symbol-name pkg)))
+(loop for pkg in *quicklisp-packages*
+      do (ql:quickload (symbol-name pkg)))
 
 (do-defsystem :name "bogenherr"
   :version "1"

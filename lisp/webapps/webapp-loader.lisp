@@ -118,25 +118,25 @@ with the new one."
   (gethash key *webapps*))
 
 (defun populate-webapps ()
-  (loop for options-file in (get-options-files) do
-       (with-open-file (input options-file :direction :input)
-         (let* ((form (read input)))
-           (set-webapp (make-instance 'webapp
-                                      :name (getf form :name)
-                                      :scheme (getf form :scheme)
-                                      :url (getf form :url)
-                                      :document-root (make-webapp-path (getf form :document-root))
-                                      :title (getf form :title)
-                                      :meta-description (getf form :meta-description)
-                                      :databases (getf form :databases)
-                                      :mail-mx (getf form :mail-mx)
-                                      :mail-from (getf form :mail-from)
-                                      :mail-postmaster (getf form :mail-postmaster)
-                                      :mail-webmaster (getf form :mail-webmaster)
-                                      :mail-info (getf form :mail-info)
-                                      :mail-login-notify (getf form :mail-login-notify)
-                                      :mail-authentication (getf form :mail-authentication)
-                                      :mail-ssl (getf form :mail-ssl)))))))
+  (loop for options-file in (get-options-files)
+        do (with-open-file (input options-file :direction :input)
+             (let* ((form (read input)))
+               (set-webapp (make-instance 'webapp
+                                          :name (getf form :name)
+                                          :scheme (getf form :scheme)
+                                          :url (getf form :url)
+                                          :document-root (make-webapp-path (getf form :document-root))
+                                          :title (getf form :title)
+                                          :meta-description (getf form :meta-description)
+                                          :databases (getf form :databases)
+                                          :mail-mx (getf form :mail-mx)
+                                          :mail-from (getf form :mail-from)
+                                          :mail-postmaster (getf form :mail-postmaster)
+                                          :mail-webmaster (getf form :mail-webmaster)
+                                          :mail-info (getf form :mail-info)
+                                          :mail-login-notify (getf form :mail-login-notify)
+                                          :mail-authentication (getf form :mail-authentication)
+                                          :mail-ssl (getf form :mail-ssl)))))))
 
 (defun bogenherr ()
   "Call this to start the server."
@@ -175,6 +175,3 @@ you wish to publish."
        (easy-routes:defroute ,name ,template-and-options
            ,var-list
          (with-request-wrapper ,uri ,page-function ,@args)))))
-       ;; (define-easy-handler (,name :uri ,uri :default-request-type ,request-type)
-       ;;     ,var-list
-       ;;   (with-request-wrapper ,uri ,page-function ,@args)))))

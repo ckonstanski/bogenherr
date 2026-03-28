@@ -166,9 +166,9 @@
          (let* ((auth-pkg (make-instance 'auth-pkg))
                 (has-all-roles-p (let ((has-all-roles-p t))
                                    (with-bogenherr-database
-                                     (loop for role in (if (listp ,roles) ,roles (list ,roles)) do
-                                          (when (not (has-role auth-pkg ,session-name role))
-                                            (setf has-all-roles-p nil)))
+                                     (loop for role in (if (listp ,roles) ,roles (list ,roles))
+                                           do (when (not (has-role auth-pkg ,session-name role))
+                                                (setf has-all-roles-p nil)))
                                      has-all-roles-p))))
            (if has-all-roles-p
                ,@body

@@ -164,7 +164,7 @@
 (declare goto-location)
 (declare reset-app)
 (declare goto-register)
-(declare site)
+(declare comp-app)
 (declare start-render)
 (declare start-nav-state)
 (declare reset-nav-state)
@@ -204,7 +204,7 @@
 
 ;; body
 
-(defn site []
+(defn comp-app []
   [:div {:class "container-fluid"}
    [:div {:class "banner"}
     [:table {:width "100%" :height "100%"}
@@ -226,7 +226,7 @@
 
 (defn start-render []
   (let [app-root (rdc/create-root (js/document.getElementById "app"))]
-    (rdc/render app-root [site])))
+    (rdc/render app-root [comp-app])))
 
 (defn start-nav-state []
   (cond (str/starts-with? (@nav-state :location) "/register/")

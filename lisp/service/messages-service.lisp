@@ -38,8 +38,8 @@
                                                        (id (get-user))
                                                        (string= (session-value :messages-read) "read")))))
     (sanitize-rest-json instance)
-    (loop for result in (results instance) do
-         (sanitize-json result))))
+    (loop for result in (results instance)
+          do (sanitize-json result))))
 
 (defclass messages/mark-service (messages-service)
   ((location-p :initform nil))

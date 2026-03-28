@@ -8,9 +8,9 @@
   (:documentation ""))
 
 (defmacro loop-intersect-slots ((slot record other-object) &body body)
-  `(loop for ,slot in (intersect-slots ,record (org-ckons-core::map-slot-names ,other-object)) do
-        (when (slot-is-field-p ,slot)
-          ,@body)))
+  `(loop for ,slot in (intersect-slots ,record (org-ckons-core::map-slot-names ,other-object))
+         do (when (slot-is-field-p ,slot)
+              ,@body)))
 
 (defmethod copy-from-record ((base-service base-service) (record record))
   (loop-intersect-slots (slot record base-service)

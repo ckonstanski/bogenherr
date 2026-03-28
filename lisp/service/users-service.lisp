@@ -26,8 +26,8 @@
       (let ((auth-pkg (make-instance 'auth-pkg)))
         (setf (users instance) (get-all-users auth-pkg))))
     (sanitize-rest-json instance)
-    (loop for user in (users instance) do
-         (sanitize-json user))))
+    (loop for user in (users instance)
+          do (sanitize-json user))))
 
 (defclass users/add-service (users/view-service)
   ((form :initarg :form
@@ -69,8 +69,8 @@
   (with-auth (instance users/add-service "users-modify")
     (with-bogenherr-database
       (let ((registration (make-instance 'registration)))
-        (loop for param in (sb-introspect:function-lambda-list #'users-add-submit-json) do
-             (setf (slot-value registration param) (symbol-value param)))
+        (loop for param in (sb-introspect:function-lambda-list #'users-add-submit-json)
+              do (setf (slot-value registration param) (symbol-value param)))
         (let* ((auth-pkg (make-instance 'auth-pkg))
                (id (insert-registration auth-pkg registration)))
           (setf registration (get-registration-by-id auth-pkg id)))
@@ -185,10 +185,10 @@
                           (progn
                             (loop for role-group in (union '("profile-admin")
                                                            (cl-ppcre:split "\\|" (role_groups registration))
-                                                           :test 'string=) do
-                                 (insert-user-role-group auth-pkg (make-instance 'user-role
-                                                                                 :user_id (id user)
-                                                                                 :role_group_name role-group)))
+                                                           :test 'string=)
+                                  do (insert-user-role-group auth-pkg (make-instance 'user-role
+                                                                                     :user_id (id user)
+                                                                                     :role_group_name role-group)))
                             (delete-registration auth-pkg hash)
                             (setf (session-value :message) "Registration completed successfully."))
                           (setf (session-value :errormsg) "Error while completing registration.")))
@@ -238,10 +238,10 @@
               (delete-role-groups auth-pkg user)
               (loop for role-group in (union '("profile-admin")
                                              (cl-ppcre:split "\\|" role_groups)
-                                             :test 'string=) do
-                   (insert-user-role-group auth-pkg (make-instance 'user-role
-                                                                   :user_id (id user)
-                                                                   :role_group_name role-group)))
+                                             :test 'string=)
+                    do (insert-user-role-group auth-pkg (make-instance 'user-role
+                                                                       :user_id (id user)
+                                                                       :role_group_name role-group)))
               (setf (session-value :message) "User saved successfully."))
             (setf (session-value :errormsg) "An error occured."))))))
 

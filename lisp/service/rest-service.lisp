@@ -37,5 +37,5 @@
 
 (defmethod sanitize-rest-json ((rest-service rest-service))
   (loop for slot in (intersection '(org-ckons-session::*session-key *table *where-expression pwd)
-                                  (org-ckons-core::map-slot-names rest-service)) do
-       (setf (slot-value rest-service slot) nil)))
+                                  (org-ckons-core::map-slot-names rest-service))
+        do (setf (slot-value rest-service slot) nil)))
