@@ -147,7 +147,7 @@ with the new one."
       (start-messenger 'text-file-messenger :filename (format nil "/var/log/lisp/~a.log" package))
       (setf *session-secret* (org-ckons-session::generate-sessionid))
       (populate-webapps)
-      (setf *acceptor* (start (make-instance 'easy-acceptor
+      (setf *acceptor* (start (make-instance 'easy-routes:easy-routes-acceptor
                                              :port *port*
                                              :document-root (make-server-path (format nil "webapps/~a/" package))
                                              :name (format nil "~a-acceptor" package)))))))
@@ -164,12 +164,17 @@ with the new one."
          (org-ckons-session::ship-headers *header-register*))
        output)))
 
-(defmacro define-endpoint (request-type uri var-list page-function &rest args)
-  "Does the grunt work of creating an `easy-handler' for each page you
-wish to publish."
-  (let ((name (gensym)))
+(defmacro define-endpoint (template-and-options var-list page-function &rest args)
+  "Does the grunt work of creating an `easy-routes' route for each page
+you wish to publish."
+  (let ((name (gensym))
+        (uri (first template-and-options))
+        (method (getf (rest template-and-options) :method)))
     `(progn
-       (org-ckons-core::logger (format nil "Publishing page. URL = [~a]" ,uri))
-       (define-easy-handler (,name :uri ,uri :default-request-type ,request-type)
+       (org-ckons-core::logger (format nil "Publishing page. URL = [~a], method = [~a]" ,uri ,method))
+       (easy-routes:defroute ,name ,template-and-options
            ,var-list
          (with-request-wrapper ,uri ,page-function ,@args)))))
+       ;; (define-easy-handler (,name :uri ,uri :default-request-type ,request-type)
+       ;;     ,var-list
+       ;;   (with-request-wrapper ,uri ,page-function ,@args)))))

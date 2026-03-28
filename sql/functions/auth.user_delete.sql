@@ -34,10 +34,6 @@ begin
             where user_id = l_id;
 
             delete
-            from general.roster
-            where user_id = l_id;
-
-            delete
             from contact.contact_us_posts_read
             where user_id = l_id;
 

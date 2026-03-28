@@ -13,7 +13,7 @@ pushd ${builddir} 2>/dev/null
 tar Jcvf docker-start.tar.xz data/
 docker stop ${container} || true
 docker container prune -f
-docker rmi --force ${container}
+docker rmi --force ${container} || true
 
 DOCKER_BUILDKIT=0 docker compose \
     --progress "plain" \

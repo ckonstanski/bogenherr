@@ -9,7 +9,11 @@
                  [prismatic/dommy "LATEST"]
                  [hiccups "LATEST"]
                  [cljsjs/showdown "LATEST"]
-                 [com.andrewmcveigh/cljs-time "LATEST"]]
+                 [com.andrewmcveigh/cljs-time "LATEST"]
+                 [cljsjs/react "LATEST"]
+                 [cljsjs/react-dom "LATEST"]
+                 [cljsjs/react-dom-server "LATEST"]
+                 [reagent "LATEST"]]
   :source-paths ["src"]
   :aliases {"fig:build" ["trampoline" "run" "-m" "figwheel.main" "-b" "dev" "-r"]
             "fig:min"   ["run" "-m" "figwheel.main" "-O" "advanced" "-bo" "dev"]}

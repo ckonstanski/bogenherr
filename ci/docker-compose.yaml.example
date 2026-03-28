@@ -1,9 +1,6 @@
----
-name: bogenherr
-
 services:
   bogenherr:
-    image: bogenherr:v0.1
+    image: bogenherr
     tty: true
     build:
       context: .

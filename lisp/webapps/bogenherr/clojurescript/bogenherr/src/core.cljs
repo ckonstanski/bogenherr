@@ -1,20 +1,18 @@
 (ns bogenherr.core
   (:require-macros [hiccups.core :as hiccups :refer [html]])
-  (:require [ajax.core :refer [GET POST raw-response-format]]
+  (:require [ajax.core :refer [GET POST PUT DELETE raw-response-format]]
             [dommy.core :as dommy]
             [hiccups.runtime :as hiccupsrt]
             [cljsjs.showdown :as showdown]
             [clojure.string :as str]
             [cljs-time.format :as time-format]
+            [reagent.core :as r]
+            [reagent.dom :as rd]
+            [reagent.dom.client :as rdc]
             [org-ckons-cljs.notifications.core :as ck-notifications]
             [org-ckons-cljs.form.core :as ck-form]))
 
 ;; declarations
-
-(enable-console-print!)
-(def jquery (js* "$"))
-(def sql-formatter (time-format/formatter "yyyy-MM-dd HH:mm:ss"))
-(def pretty-formatter (time-format/formatters :rfc822))
 
 (declare date-sql-to-pretty)
 (declare markdown-to-html)
@@ -26,7 +24,7 @@
 (declare handler-menu)
 (declare handler-menu-user)
 (declare render-menu)
-(declare template-home)
+(declare comp-home)
 (declare handler-home)
 (declare render-home)
 (declare template-login)
@@ -166,6 +164,19 @@
 (declare goto-location)
 (declare reset-app)
 (declare goto-register)
+(declare site)
+(declare start-render)
+(declare start-nav-state)
+(declare reset-nav-state)
+(declare start)
+
+(enable-console-print!)
+(def jquery (js* "$"))
+(def sql-formatter (time-format/formatter "yyyy-MM-dd HH:mm:ss"))
+(def pretty-formatter (time-format/formatters :rfc822))
+(def nav-state (r/atom {:location "/home"}))
+
+;; helper functions
 
 (defn date-sql-to-pretty [sql-date]
   (first (str/split (time-format/unparse pretty-formatter (time-format/parse sql-formatter (first (str/split sql-date ".")))) " Z")))
@@ -191,6 +202,49 @@
                      (second (str/split (-> this (.prop "id")) "_")))))
                (.toArray (jquery selector)))))
 
+;; body
+
+(defn site []
+  [:div {:class "container-fluid"}
+   [:div {:class "banner"}
+    [:table {:width "100%" :height "100%"}
+     [:tbody
+      [:tr
+       [:td {:class "banner-menu"}
+        [:div {:id "menu-user"}]]
+       [:td {:class "banner-title"} "Bogen-" [:i "Herr"]]
+       [:td {:class "banner-menu"} " "]]]]]
+   [:div {:id "menu" :class "well"}]
+   [:div {:id "errormsg"}]
+   [:div {:id "message"}]
+   [:div {:id "body"}]
+   [:div {:id "footer"}
+    [:hr]
+    "Carlos Konstanski (970) 294-9708"]])
+
+;; start the react app
+
+(defn start-render []
+  (let [app-root (rdc/create-root (js/document.getElementById "app"))]
+    (rdc/render app-root [site])))
+
+(defn start-nav-state []
+  (cond (str/starts-with? (@nav-state :location) "/register/")
+        (goto-register (str/replace-first (@nav-state :location) "/register/" ""))
+        :else (goto-location (@nav-state :location))))
+
+(defn reset-nav-state [url]
+  (reset! nav-state (assoc @nav-state :location url)))
+
+(defn ^:dev/after-load start
+  ([]
+   (start-render)
+   (start-nav-state))
+  ([url]
+   (reset-nav-state url)
+   (start-render)
+   (start-nav-state)))
+
 ;; notifications
 
 (defn notifications [jsonobj]
@@ -212,7 +266,7 @@
    (for [menuitem menuitems]
      [:li {:class "nav-item"}
       [:a {:class (cond (= (str/upper-case (get menuitem "handler"))
-                           (str/upper-case (dommy/html (dommy/sel1 :#location))))
+                           (str/upper-case (@nav-state :location)))
                         "nav-link active"
                         :else
                         "nav-link")
@@ -250,13 +304,14 @@
 ;; home
 
 (hiccups/defhtml template-home [jsonobj]
-  [:h2 {:style "text-align: center"} "Welcome To Carlos Konstanski's Music Studio"]
-  [:h3 {:style "text-align: center"}
-   [:i "a.k.a. der Bogenherr<br/>a.k.a. Dr. Divertimento"]]
-  [:h2 {:style "text-align: center"} "Study the Violin, Viola and Viola d'Amore With Me!"]
-  [:div {:style "text-align: center"}
-   [:img {:style "width: 100%"
-          :src "/static/images/instrument-cabinet.jpg"}]])
+  [:div
+   [:h2 {:style "text-align: center"} "Welcome To Carlos Konstanski's Music Studio"]
+   [:h3 {:style "text-align: center"}
+    [:i "a.k.a. der Bogenherr" [:br] "a.k.a. Dr. Divertimento"]]
+   [:h2 {:style "text-align: center"} "Study the Violin, Viola and Viola d'Amore With Me!"]
+   [:div {:style "text-align: center"}
+    [:img {:style "width: 100%"
+           :src "/static/images/instrument-cabinet.jpg"}]]])
 
 (defn handler-home [response]
   (let [jsonobj (js->clj (js/JSON.parse response))]
@@ -303,7 +358,7 @@
           (goto-location "/login")
           (get jsonobj "message")
           (do
-            (dommy/set-html! (dommy/sel1 :#location) "/home")
+            (reset-nav-state "/home")
             (render-home)
             (render-menu)))))
 
@@ -319,7 +374,7 @@
 (defn handler-logout [response]
   (let [jsonobj (js->clj (js/JSON.parse response))]
     (render-home "You are now logged out" "")
-    (dommy/set-html! (dommy/sel1 :#location) "/home")
+    (reset-nav-state "/home")
     (render-menu)))
 
 (defn render-logout []
@@ -644,7 +699,7 @@
                                 :referrerpolicy "strict-origin-when-cross-origin"
                                 :allowfullscreen "allowfullscreen"}]
                       :else
-                      (let [img-src (str "/gallery/file/view?id=" (get rec "id"))]
+                      (let [img-src (str "/gallery/file/view/" (get rec "id"))]
                         [:img {:style "height:405px; cursor:pointer; cursor:hand"
                                :src img-src
                                :onclick (str (namespace ::x) ".on_gallery_image_clicked('" img-src "')")}]))]
@@ -771,10 +826,9 @@
     (on-menu-clicked "/gallery")))
 
 (defn render-gallery-delete [id]
-  (POST "/gallery/delete"
-        {:format :raw
-         :params {:id id}
-         :handler handler-gallery-delete}))
+  (DELETE (str "/gallery/delete/" id)
+          {:format :raw
+           :handler handler-gallery-delete}))
 
 ;; testimonials
 
@@ -1282,7 +1336,7 @@
 ;; location
 
 (defn on-menu-clicked [handler]
-  (dommy/set-html! (dommy/sel1 :#location) handler)
+  (reset-nav-state handler)
   (render-menu)
   (cond (= handler "/home") (render-home)
         (= handler "/login") (render-login)
@@ -1311,6 +1365,6 @@
   (set! (.-location js/document) "/"))
 
 (defn goto-register [hash]
-  (dommy/set-html! (dommy/sel1 :#location) "/users/register")
+  (reset-nav-state "/users/register")
   (render-menu)
   (render-users-register hash))
