@@ -1328,10 +1328,9 @@
     (on-menu-clicked "/users")))
 
 (defn render-users-delete [id]
-  (POST "/users/delete"
-        {:format :raw
-         :params {:id id}
-         :handler handler-users-delete}))
+  (DELETE (str "/users/delete" id)
+          {:format :raw
+           :handler handler-users-delete}))
 
 ;; location
 

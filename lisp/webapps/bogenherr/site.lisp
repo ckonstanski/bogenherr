@@ -219,4 +219,4 @@
 (define-endpoint ("/users/modify" :method :post) (&post (id :parameter-type 'integer)) .users-modify)
 (define-endpoint ("/users/modify/submit" :method :post) (&post (id :parameter-type 'integer) (role_groups :parameter-type 'string) (username :parameter-type 'string) (first_name :parameter-type 'string) (last_name :parameter-type 'string) (email :parameter-type 'string) (phone :parameter-type 'string)) .users-modify-submit)
 (define-endpoint ("/users/toggle-active" :method :post) (&post (id :parameter-type 'integer)) .users-toggle-active)
-(define-endpoint ("/users/delete" :method :post) (&post (id :parameter-type 'integer)) .users-delete)
+(define-endpoint ("/users/delete/:id" :method :delete) (&path (id 'integer)) .users-delete)
