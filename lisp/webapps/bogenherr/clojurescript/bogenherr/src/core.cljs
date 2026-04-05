@@ -1328,7 +1328,7 @@
     (on-menu-clicked "/users")))
 
 (defn render-users-delete [id]
-  (DELETE (str "/users/delete" id)
+  (DELETE (str "/users/delete/" id)
           {:format :raw
            :handler handler-users-delete}))
 
