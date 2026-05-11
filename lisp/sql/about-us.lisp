@@ -7,6 +7,9 @@
   ((id :initarg :id
        :initform nil
        :accessor id)
+   (category :initarg :category
+             :initform nil
+             :accessor category)
    (content :initarg :content
             :initform nil
             :accessor content)

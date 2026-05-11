@@ -56,7 +56,7 @@
 (declare render-password-submit)
 (declare template-about-us)
 (declare handler-about-us)
-(declare render-about-us)
+(declare render-lessons)
 (declare template-about-us-view)
 (declare handler-about-us-view)
 (declare render-about-us-view)
@@ -166,15 +166,16 @@
 (declare goto-register)
 (declare comp-app)
 (declare start-render)
-(declare start-nav-state)
-(declare reset-nav-state)
+(declare start-location)
+(declare reset-location)
+(declare reset-about-us-category)
 (declare start)
 
 (enable-console-print!)
 (def jquery (js* "$"))
 (def sql-formatter (time-format/formatter "yyyy-MM-dd HH:mm:ss"))
 (def pretty-formatter (time-format/formatters :rfc822))
-(def nav-state (r/atom {:location "/home"}))
+(def nav-state (r/atom {:location "/home" :about-us-category nil}))
 
 ;; helper functions
 
@@ -228,22 +229,25 @@
   (let [app-root (rdc/create-root (js/document.getElementById "app"))]
     (rdc/render app-root [comp-app])))
 
-(defn start-nav-state []
+(defn start-location []
   (cond (str/starts-with? (@nav-state :location) "/register/")
         (goto-register (str/replace-first (@nav-state :location) "/register/" ""))
         :else (goto-location (@nav-state :location))))
 
-(defn reset-nav-state [url]
+(defn reset-location [url]
   (reset! nav-state (assoc @nav-state :location url)))
+
+(defn reset-about-us-category [category]
+  (reset! nav-state (assoc @nav-state :about-us-category category)))
 
 (defn ^:dev/after-load start
   ([]
    (start-render)
-   (start-nav-state))
+   (start-location))
   ([url]
-   (reset-nav-state url)
+   (reset-location url)
    (start-render)
-   (start-nav-state)))
+   (start-location)))
 
 ;; notifications
 
@@ -358,7 +362,7 @@
           (goto-location "/login")
           (get jsonobj "message")
           (do
-            (reset-nav-state "/home")
+            (reset-location "/home")
             (render-home)
             (render-menu)))))
 
@@ -374,7 +378,7 @@
 (defn handler-logout [response]
   (let [jsonobj (js->clj (js/JSON.parse response))]
     (render-home "You are now logged out" "")
-    (reset-nav-state "/home")
+    (reset-location "/home")
     (render-menu)))
 
 (defn render-logout []
@@ -524,10 +528,12 @@
                   :pwd2 (dommy/value (dommy/sel1 :#pwd2))}
          :handler handler-password-submit}))
 
-;; about-us
+;; about-us (lessons, gigs)
 
 (hiccups/defhtml template-about-us [jsonobj]
-  [:h1 {:style "text-align: center"} "About the Studio"]
+  [:h1 {:style "text-align: center"}
+   (cond (= (@nav-state :about-us-category) "lessons") "About the Studio"
+         (= (@nav-state :about-us-category) "gigs") "Hire Me to Play")]
   [:div {:id "content"}]
   [:div {:id "modify"
          :class "modal fade"
@@ -553,12 +559,16 @@
 
 (defn handler-about-us [response]
   (let [jsonobj (js->clj (js/JSON.parse response))]
+    (reset-about-us-category (get jsonobj "category"))
     (notifications jsonobj)
     (dommy/set-html! (dommy/sel1 :#body) (template-about-us jsonobj))
     (render-about-us-view)))
 
-(defn render-about-us []
-  (GET "/about-us" {:handler handler-about-us}))
+(defn render-lessons []
+  (GET "/lessons" {:handler handler-about-us}))
+
+(defn render-gigs []
+  (GET "/gigs" {:handler handler-about-us}))
 
 ;; about-us-view
 
@@ -576,7 +586,9 @@
     (dommy/set-html! (dommy/sel1 :#markdown) (markdown-to-html (get jsonobj "content")))))
 
 (defn render-about-us-view []
-  (GET "/about-us/view" {:handler handler-about-us-view}))
+  (GET (cond (= (@nav-state :about-us-category) "lessons") "/lessons/view"
+             (= (@nav-state :about-us-category) "gigs") "/gigs/view")
+       {:handler handler-about-us-view}))
 
 ;; about-us-modify
 
@@ -589,12 +601,16 @@
 (defn handler-about-us-modify [response]
   (let [jsonobj (js->clj (js/JSON.parse response))]
     (auth-notifications jsonobj)
-    (dommy/set-html! (dommy/sel1 :#modify-title) "About Us - Modify")
+    (dommy/set-html! (dommy/sel1 :#modify-title)
+                     (cond (= (@nav-state :about-us-category) "lessons") "About the Studio - Modify"
+                           (= (@nav-state :about-us-category) "lessons") "For Hire - Modify"))
     (dommy/set-html! (dommy/sel1 :#modify-body) (template-about-us-modify jsonobj))
     (.modal (jquery "#modify"))))
 
 (defn render-about-us-modify []
-  (POST "/about-us/modify" {:handler handler-about-us-modify}))
+  (POST (cond (= (@nav-state :about-us-category) "lessons") "/lessons/modify"
+              (= (@nav-state :about-us-category) "gigs") "/gigs/modify")
+        {:handler handler-about-us-modify}))
 
 ;; about-us-modify-submit
 
@@ -612,7 +628,8 @@
     (dommy/set-html! (dommy/sel1 :#markdown) (markdown-to-html (get jsonobj "content")))))
 
 (defn render-about-us-modify-submit []
-  (POST "/about-us/modify/submit"
+  (POST (cond (= (@nav-state :about-us-category) "lessons") "/lessons/modify/submit"
+              (= (@nav-state :about-us-category) "gigs") "/gigs/modify/submit")
         {:format :raw
          :params {:content (dommy/value (dommy/sel1 :#txt-content))}
          :handler handler-about-us-modify-submit}))
@@ -1335,14 +1352,15 @@
 ;; location
 
 (defn on-menu-clicked [handler]
-  (reset-nav-state handler)
+  (reset-location handler)
   (render-menu)
   (cond (= handler "/home") (render-home)
         (= handler "/login") (render-login)
         (= handler "/logout") (render-logout)
         (= handler "/profile") (render-profile)
         (= handler "/password") (render-password)
-        (= handler "/about-us") (render-about-us)
+        (= handler "/lessons") (render-lessons)
+        (= handler "/gigs") (render-gigs)
         (= handler "/gallery") (render-gallery)
         (= handler "/testimonials") (render-testimonials)
         (= handler "/contact-us") (render-contact-us)
@@ -1364,6 +1382,6 @@
   (set! (.-location js/document) "/"))
 
 (defn goto-register [hash]
-  (reset-nav-state "/users/register")
+  (reset-location "/users/register")
   (render-menu)
   (render-users-register hash))

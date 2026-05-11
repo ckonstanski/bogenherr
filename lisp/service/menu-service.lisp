@@ -4,7 +4,8 @@
 (in-package :bogenherr)
 
 (defparameter *menu-config* '((:id "a_menu_home" :label "Home" :handler "/home" :permissions "_Public")
-                              (:id "a_menu_about_us" :label "About the Studio" :handler "/about-us" :permissions "_Public")
+                              (:id "a_menu_lessons" :label "About the Studio" :handler "/lessons" :permissions "_Public")
+                              (:id "a_menu_gigs" :label "For Hire" :handler "/gigs" :permissions "_Public")
                               (:id "a_menu_gallery" :label "Gallery" :handler "/gallery" :permissions "_Public")
                               ;;(:id "a_menu_testimonials" :label "Testimonials" :handler "/testimonials" :permissions "_Public")
                               (:id "a_menu_contact_us" :label "Contact Me" :handler "/contact-us" :permissions "_Public")

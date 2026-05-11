@@ -88,8 +88,9 @@ session."))
   (:documentation "Creates a new user session and returns the
 sessionid."))
 
-(defgeneric get-about-us (record-pkg)
-  (:documentation "Gets the one and only general.about_us record."))
+(defgeneric get-about-us (record-pkg category)
+  (:documentation "Gets the one and only general.about_us record with the given
+`category'."))
 
 (defgeneric get-testimonials (record-pkg)
   (:documentation "Gets the one and only general.testimonials record."))

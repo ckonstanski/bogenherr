@@ -7,8 +7,8 @@
   ()
   (:documentation ""))
 
-(defmethod get-about-us ((general-pkg general-pkg))
-  (get-record general-pkg (make-instance 'about-us)))
+(defmethod get-about-us ((general-pkg general-pkg) category)
+  (get-record general-pkg (make-instance 'about-us :category category)))
 
 (defmethod get-testimonials ((general-pkg general-pkg))
   (get-record general-pkg (make-instance 'testimonials)))

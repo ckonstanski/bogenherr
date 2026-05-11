@@ -4,12 +4,14 @@
 (in-package :bogenherr)
 
 (defclass about-us-service (rest-service)
-  ()
+  ((category :initarg :category
+             :initform nil
+             :accessor category))
   (:documentation ""))
 
-(defun about-us-json ()
+(defun about-us-json (category)
   (with-noauth (instance about-us-service)
-    t))
+    (setf (category instance) category)))
 
 (defclass about-us/view-service (about-us-service)
   ((content :initarg :content
@@ -21,14 +23,15 @@
    (location :initform nil))
   (:documentation ""))
 
-(defun about-us-view-json ()
+(defun about-us-view-json (category)
   (with-noauth (instance about-us/view-service)
+    (setf (category instance) category)
     (with-valid-user (user "about-us-modify")
         (setf (admin-p instance) nil)
       (setf (admin-p instance) t))
     (with-bogenherr-database
       (let* ((general-pkg (make-instance 'general-pkg))
-             (about-us (get-about-us general-pkg)))
+             (about-us (get-about-us general-pkg category)))
         (when about-us
           (setf (content instance) (content about-us)))))))
 
@@ -40,22 +43,22 @@
    (location-p :initform nil))
   (:documentation ""))
 
-(defun about-us-modify-json ()
+(defun about-us-modify-json (category)
   (with-auth (instance about-us/modify-service "about-us-modify")
     (with-bogenherr-database
       (let* ((general-pkg (make-instance 'general-pkg))
-             (about-us (get-about-us general-pkg)))
+             (about-us (get-about-us general-pkg category)))
         (setf (form instance) (make-form "about-us-modify-form"
                                          nil
                                          nil
                                          `((:label "Content" :name "txt-content" :field-type "textarea" :value ,(content about-us) :required "required")
                                            (:label "Modify" :field-type "button" :onclick "on_about_us_modify_submit_clicked()"))))))))
 
-(defun about-us-modify-submit-json (content)
+(defun about-us-modify-submit-json (category content)
   (with-auth (instance about-us/modify-service "about-us-modify")
     (with-bogenherr-database
       (let* ((general-pkg (make-instance 'general-pkg))
-             (about-us (get-about-us general-pkg)))
+             (about-us (get-about-us general-pkg category)))
         (when about-us
           (setf (content about-us) content)
           (update-record general-pkg about-us))))

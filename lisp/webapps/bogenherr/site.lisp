@@ -71,17 +71,29 @@
 (defmacro .password-submit ()
   `(password-submit-json id pwd pwd2))
 
-(defmacro .about-us ()
-  `(about-us-json))
+(defmacro .lessons ()
+  `(about-us-json "lessons"))
 
-(defmacro .about-us-view ()
-  `(about-us-view-json))
+(defmacro .lessons-view ()
+  `(about-us-view-json "lessons"))
 
-(defmacro .about-us-modify ()
-  `(about-us-modify-json))
+(defmacro .lessons-modify ()
+  `(about-us-modify-json "lessons"))
 
-(defmacro .about-us-modify-submit ()
-  `(about-us-modify-submit-json content))
+(defmacro .lessons-modify-submit ()
+  `(about-us-modify-submit-json "lessons" content))
+
+(defmacro .gigs ()
+  `(about-us-json "gigs"))
+
+(defmacro .gigs-view ()
+  `(about-us-view-json "gigs"))
+
+(defmacro .gigs-modify ()
+  `(about-us-modify-json "gigs"))
+
+(defmacro .gigs-modify-submit ()
+  `(about-us-modify-submit-json "gigs" content))
 
 (defmacro .gallery ()
   `(gallery-json))
@@ -186,10 +198,14 @@
 (define-endpoint ("/profile/modify/submit" :method :post) (&post (id :parameter-type 'integer) (username :parameter-type 'string) (first_name :parameter-type 'string) (last_name :parameter-type 'string) (email :parameter-type 'string) (phone :parameter-type 'string)) .profile-modify-submit)
 (define-endpoint ("/password" :method :get) () .password)
 (define-endpoint ("/password/submit" :method :post) (&post (id :parameter-type 'integer) (pwd :parameter-type 'string) (pwd2 :parameter-type 'string)) .password-submit)
-(define-endpoint ("/about-us" :method :get) () .about-us)
-(define-endpoint ("/about-us/view" :method :get) () .about-us-view)
-(define-endpoint ("/about-us/modify" :method :post) () .about-us-modify)
-(define-endpoint ("/about-us/modify/submit" :method :post) (&post (content :parameter-type 'string)) .about-us-modify-submit)
+(define-endpoint ("/lessons" :method :get) () .lessons)
+(define-endpoint ("/lessons/view" :method :get) () .lessons-view)
+(define-endpoint ("/lessons/modify" :method :post) () .lessons-modify)
+(define-endpoint ("/lessons/modify/submit" :method :post) (&post (content :parameter-type 'string)) .lessons-modify-submit)
+(define-endpoint ("/gigs" :method :get) () .gigs)
+(define-endpoint ("/gigs/view" :method :get) () .gigs-view)
+(define-endpoint ("/gigs/modify" :method :post) () .gigs-modify)
+(define-endpoint ("/gigs/modify/submit" :method :post) (&post (content :parameter-type 'string)) .gigs-modify-submit)
 (define-endpoint ("/gallery" :method :get) () .gallery)
 (define-endpoint ("/gallery/view" :method :get) () .gallery-view)
 (define-endpoint ("/gallery/add" :method :post) () .gallery-add)
