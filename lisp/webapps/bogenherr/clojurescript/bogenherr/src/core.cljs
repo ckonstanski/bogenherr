@@ -602,8 +602,9 @@
   (let [jsonobj (js->clj (js/JSON.parse response))]
     (auth-notifications jsonobj)
     (dommy/set-html! (dommy/sel1 :#modify-title)
-                     (cond (= (@nav-state :about-us-category) "lessons") "About the Studio - Modify"
-                           (= (@nav-state :about-us-category) "lessons") "For Hire - Modify"))
+                     (str (cond (= (@nav-state :about-us-category) "lessons") "About the Studio"
+                                (= (@nav-state :about-us-category) "gigs") "For Hire")
+                          " - Modify"))
     (dommy/set-html! (dommy/sel1 :#modify-body) (template-about-us-modify jsonobj))
     (.modal (jquery "#modify"))))
 
