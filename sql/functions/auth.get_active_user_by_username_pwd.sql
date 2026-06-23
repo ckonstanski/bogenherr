@@ -27,4 +27,4 @@ begin
 
     return;
 end;
-$$ language plpgsql;a
+$$ language plpgsql;
