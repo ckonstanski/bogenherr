@@ -944,7 +944,18 @@
 
 (hiccups/defhtml template-contact-us [jsonobj]
   [:h1 {:style "text-align: center"} "Reach out to me by filling out the form."]
-  [:div {:id "content"}])
+  [:div {:id "content"}]
+  [:table {:width "100%"}
+   [:tr
+    [:td {:style "width: 100%; text-align: center;"}
+     [:h3 "Located on the edge of the ISU campus!"]]]
+   [:tr
+    [:td {:style "width: 100%; text-align: center;"}
+     [:iframe {:src "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3225.263770603599!2d-112.4266916!3d42.8635091!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x53554f343c440407%3A0xf13bf897ecb4f7e0!2sBogenherr%20Violin%20and%20Viola%20Studio!5e1!3m2!1sen!2sus!4v1783097048097!5m2!1sen!2sus"
+               :style "width: 600px; height: 450px; border: 0px;"
+               :allowfullscreen ""
+               :loading "lazy"
+               :referrerpolicy "strict-origin-when-cross-origin"}]]]])
 
 (defn handler-contact-us [response]
   (let [jsonobj (js->clj (js/JSON.parse response))]
