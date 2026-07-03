@@ -16,7 +16,7 @@ git clone -b master git@github.com:ckonstanski/org-ckons-sql
 
 logdir="/var/log/lisp"
 mv -f ${logdir}/bogenherr.log.1 ${logdir}/bogenherr.log.2
-mv -f ${logdir}/${APPNAME}bogenherr.log ${logdir}/bogenherr.log.1
+mv -f ${logdir}/bogenherr.log ${logdir}/bogenherr.log.1
 
 pushd ~/common-lisp/systems
 ln -s ~/opt/bogenherr/lisp/bogenherr.asd bogenherr.asd
