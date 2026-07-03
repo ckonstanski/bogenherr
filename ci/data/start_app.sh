@@ -46,4 +46,4 @@ lein clean
 lein fig:build | tee /tmp/bogenherr/lein.log &
 popd
 
-SBCL_HOME=/usr/lib/sbcl SBCL_SOURCE_ROOT=/usr/lib/sbcl/src exec sbcl --dynamic-space-size 2048 --userinit /data/bogenherr-starter.lisp | tee /tmp/bogenherr/sbcl.log
+#SBCL_HOME=/usr/lib/sbcl SBCL_SOURCE_ROOT=/usr/lib/sbcl/src exec sbcl --dynamic-space-size 2048 --userinit /data/bogenherr-starter.lisp | tee /tmp/bogenherr/sbcl.log
