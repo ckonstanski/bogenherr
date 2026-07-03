@@ -29,7 +29,7 @@
   :maintainer "Carlos Konstanski <me@ckons.org>"
   :author "Carlos Konstanski <me@ckons.org>"
   :description "bogenherr"
-  :long-description "bogenherr is a web application written in Common Lisp based on the Hunchentoot web server. The client-side code is written in ClojureScript. Purpose: public website for Violin and Viola Lessons in Pocatello ID."
+  :long-description "bogenherr is a web application written in Common Lisp based on the Hunchentoot web server. The client-side code is written in ClojureScript. Purpose: public website for the Violin and Viola Studio in Pocatello ID."
   :depends-on *all-packages*
   :components ((:module core
                 :components ((:file "core")))
