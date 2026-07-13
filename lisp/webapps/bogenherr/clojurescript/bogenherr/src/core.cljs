@@ -9,7 +9,7 @@
             [reagent.core :as r]
             [reagent.dom :as rd]
             [reagent.dom.client :as rdc]
-            [org-ckons-cljs.notifications.core :as ck-notifications]
+            [org-ckons-cljs.notifications.react :as ck-notifications]
             [org-ckons-cljs.form.core :as ck-form]))
 
 ;; declarations
@@ -17,6 +17,11 @@
 (declare date-sql-to-pretty)
 (declare markdown-to-html)
 (declare reduce-checkboxes)
+(declare comp-app)
+(declare start-render)
+(declare start-location)
+(declare reset-location)
+(declare start)
 (declare notifications)
 (declare auth-notifications)
 (declare template-menu)
@@ -162,14 +167,9 @@
 (declare on-menu-clicked)
 (declare handler-location)
 (declare goto-location)
-(declare reset-app)
 (declare goto-register)
-(declare comp-app)
-(declare start-render)
-(declare start-location)
-(declare reset-location)
+(declare reset-app)
 (declare reset-about-us-category)
-(declare start)
 
 (enable-console-print!)
 (def jquery (js* "$"))
@@ -216,8 +216,8 @@
        [:td {:class "banner-title"} "Bogen-" [:i "Herr"]]
        [:td {:class "banner-menu"} " "]]]]]
    [:div {:id "menu" :class "well"}]
-   [:div {:id "errormsg"}]
-   [:div {:id "message"}]
+   [ck-notifications/comp-errormsg]
+   [ck-notifications/comp-message]
    [:div {:id "body"}]
    [:div {:id "footer"}
     [:hr]
@@ -232,7 +232,8 @@
 (defn start-location []
   (cond (str/starts-with? (@nav-state :location) "/register/")
         (goto-register (str/replace-first (@nav-state :location) "/register/" ""))
-        :else (goto-location (@nav-state :location))))
+        :else
+        (goto-location (@nav-state :location))))
 
 (defn reset-location [url]
   (reset! nav-state (assoc @nav-state :location url)))
@@ -252,8 +253,8 @@
 ;; notifications
 
 (defn notifications [jsonobj]
-  (ck-notifications/maybe-message jsonobj)
-  (ck-notifications/maybe-error jsonobj))
+  (ck-notifications/set-message (get jsonobj "message"))
+  (ck-notifications/set-errormsg (get jsonobj "errormsg")))
 
 (defn auth-notifications [jsonobj]
   (cond (empty? (get jsonobj "errormsg"))
