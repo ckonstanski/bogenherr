@@ -253,8 +253,8 @@
 ;; notifications
 
 (defn notifications [jsonobj]
-  (ck-notifications/set-message (get jsonobj "message"))
-  (ck-notifications/set-errormsg (get jsonobj "errormsg")))
+  (ck-notifications/reset-message (get jsonobj "message"))
+  (ck-notifications/reset-errormsg (get jsonobj "errormsg")))
 
 (defn auth-notifications [jsonobj]
   (cond (empty? (get jsonobj "errormsg"))
