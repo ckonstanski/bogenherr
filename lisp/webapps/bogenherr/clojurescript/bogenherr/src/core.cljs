@@ -226,7 +226,11 @@
    [:div {:id "body"}]
    [:div {:id "footer"}
     [:hr]
-    "Carlos Konstanski (970) 294-9708"]])
+    "Carlos Konstanski (970) 294-9708"
+    [:br]
+    [:a {:href "https://github.com/ckonstanski/bogenherr/tree/master"
+         :target "_blank"}
+     "Source code on GitHub"]]])
 
 ;; start the react app
 
