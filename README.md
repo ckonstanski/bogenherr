@@ -9,7 +9,26 @@ Visit the website: https://www.bogenherr.org/
 while the client-side is written in ClojureScript. Additionally the
 client-side uses React.js via the Reagent library.
 
-Two of the ClojureScript library dependencies are also written by me:
+Eight of the Common Lisp libraries are written by me:
+
+https://github.com/ckonstanski/org-ckons-condition
+
+https://github.com/ckonstanski/org-ckons-core
+
+https://github.com/ckonstanski/org-ckons-file
+
+https://github.com/ckonstanski/org-ckons-http
+
+https://github.com/ckonstanski/org-ckons-json
+
+https://github.com/ckonstanski/org-ckons-serializable
+
+https://github.com/ckonstanski/org-ckons-session
+
+https://github.com/ckonstanski/org-ckons-sql
+
+In addition two of the ClojureScript library dependencies are written
+by me:
 
 https://github.com/ckonstanski/org-ckons-cljs.form
 
