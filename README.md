@@ -15,7 +15,7 @@ https://github.com/ckonstanski/org-ckons-cljs.notifications
 
 `bogenherr` is deployed to production via docker-compose. For local
 development I use the standard Emacs, SLIME and CIDER. The
-ClojureScript project is managed with Leiningen-bin.
+ClojureScript project is managed with leiningen-bin.
 
 This repo was made public primarily as a small sample of my
 programming work for potential IT hiring managers. I don't expect that
