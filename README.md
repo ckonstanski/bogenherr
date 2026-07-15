@@ -10,6 +10,7 @@ client-side uses React.js via the Reagent library.
 Two of the ClojureScript library dependencies are also written by me:
 
 https://github.com/ckonstanski/org-ckons-cljs.form
+
 https://github.com/ckonstanski/org-ckons-cljs.notifications
 
 `bogenherr` is deployed to production via docker-compose. For local
