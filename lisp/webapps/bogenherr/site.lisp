@@ -95,6 +95,18 @@
 (defmacro .gigs-modify-submit ()
   `(about-us-modify-submit-json "gigs" content))
 
+(defmacro .programming ()
+  `(about-us-json "programming"))
+
+(defmacro .programming-view ()
+  `(about-us-view-json "programming"))
+
+(defmacro .programming-modify ()
+  `(about-us-modify-json "programming"))
+
+(defmacro .programming-modify-submit ()
+  `(about-us-modify-submit-json "programming" content))
+
 (defmacro .gallery ()
   `(gallery-json))
 
@@ -206,6 +218,10 @@
 (define-endpoint ("/gigs/view" :method :get) () .gigs-view)
 (define-endpoint ("/gigs/modify" :method :post) () .gigs-modify)
 (define-endpoint ("/gigs/modify/submit" :method :post) (&post (content :parameter-type 'string)) .gigs-modify-submit)
+(define-endpoint ("/programming" :method :get) () .programming)
+(define-endpoint ("/programming/view" :method :get) () .programming-view)
+(define-endpoint ("/programming/modify" :method :post) () .programming-modify)
+(define-endpoint ("/programming/modify/submit" :method :post) (&post (content :parameter-type 'string)) .programming-modify-submit)
 (define-endpoint ("/gallery" :method :get) () .gallery)
 (define-endpoint ("/gallery/view" :method :get) () .gallery-view)
 (define-endpoint ("/gallery/add" :method :post) () .gallery-add)

@@ -542,12 +542,13 @@
                   :pwd2 (dommy/value (dommy/sel1 :#pwd2))}
          :handler handler-password-submit}))
 
-;; about-us (lessons, gigs)
+;; about-us (lessons, gigs, programming)
 
 (hiccups/defhtml template-about-us [jsonobj]
   [:h1 {:style "text-align: center"}
    (cond (= @about-us-category-state "lessons") "About the Studio"
-         (= @about-us-category-state "gigs") "Hire Me to Play")]
+         (= @about-us-category-state "gigs") "Hire Me to Play"
+         (= @about-us-category-state "programming") "Hire Me to Write Software")]
   [:div {:id "content"}]
   [:div {:id "modify"
          :class "modal fade"
@@ -584,6 +585,9 @@
 (defn render-gigs []
   (GET "/gigs" {:handler handler-about-us}))
 
+(defn render-programming []
+  (GET "/programming" {:handler handler-about-us}))
+
 ;; about-us-view
 
 (hiccups/defhtml template-about-us-view [jsonobj]
@@ -600,8 +604,7 @@
     (dommy/set-html! (dommy/sel1 :#markdown) (markdown-to-html (get jsonobj "content")))))
 
 (defn render-about-us-view []
-  (GET (cond (= @about-us-category-state "lessons") "/lessons/view"
-             (= @about-us-category-state "gigs") "/gigs/view")
+  (GET (str "/" @about-us-category-state "/view")
        {:handler handler-about-us-view}))
 
 ;; about-us-modify
@@ -617,14 +620,14 @@
     (auth-notifications jsonobj)
     (dommy/set-html! (dommy/sel1 :#modify-title)
                      (str (cond (= @about-us-category-state "lessons") "About the Studio"
-                                (= @about-us-category-state "gigs") "For Hire")
+                                (= @about-us-category-state "gigs") "For Hire"
+                                (= @about-us-category-state "programming") "Software Consulting")
                           " - Modify"))
     (dommy/set-html! (dommy/sel1 :#modify-body) (template-about-us-modify jsonobj))
     (.modal (jquery "#modify"))))
 
 (defn render-about-us-modify []
-  (POST (cond (= @about-us-category-state "lessons") "/lessons/modify"
-              (= @about-us-category-state "gigs") "/gigs/modify")
+  (POST (str "/" @about-us-category-state "/modify")
         {:handler handler-about-us-modify}))
 
 ;; about-us-modify-submit
@@ -643,8 +646,7 @@
     (dommy/set-html! (dommy/sel1 :#markdown) (markdown-to-html (get jsonobj "content")))))
 
 (defn render-about-us-modify-submit []
-  (POST (cond (= @about-us-category-state "lessons") "/lessons/modify/submit"
-              (= @about-us-category-state "gigs") "/gigs/modify/submit")
+  (POST (str "/" @about-us-category-state "/modify/submit")
         {:format :raw
          :params {:content (dommy/value (dommy/sel1 :#txt-content))}
          :handler handler-about-us-modify-submit}))
@@ -1387,6 +1389,7 @@
         (= handler "/password") (render-password)
         (= handler "/lessons") (render-lessons)
         (= handler "/gigs") (render-gigs)
+        (= handler "/programming") (render-programming)
         (= handler "/gallery") (render-gallery)
         (= handler "/testimonials") (render-testimonials)
         (= handler "/contact-us") (render-contact-us)
