@@ -16,7 +16,7 @@
                    (:href "/static/css/stylesheet.css" :crossorigin "anonymous")))
        ,@(mapcar (lambda (js)
                    `((script :type "text/javascript" :src ,(getf js :src) :integrity ,(getf js :integrity) :crossorigin ,(getf js :crossorigin))))
-                 '((:src "https://code.jquery.com/jquery-3.7.1.slim.min.js" :integrity "ha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" :crossorigin "anonymous")))
+                 '((:src "https://code.jquery.com/jquery-3.7.1.slim.min.js" :integrity "sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" :crossorigin "anonymous")))
        ((script :type "text/javascript" :src "/cljs-out/dev-main.js")))
       ((body :onload ,(format nil "bogenherr.core.start(~a)" ,(if start-url
                                                                   (format nil "'~a'" start-url)

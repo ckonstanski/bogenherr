@@ -24,8 +24,8 @@
 (declare start)
 (declare notifications)
 (declare auth-notifications)
-(declare template-menu)
-(declare template-menu-user)
+(declare comp-menu-main)
+(declare comp-menu-user)
 (declare handler-menu)
 (declare handler-menu-user)
 (declare render-menu)
@@ -172,10 +172,15 @@
 (declare reset-about-us-category)
 
 (enable-console-print!)
-(def jquery (js* "$"))
-(def sql-formatter (time-format/formatter "yyyy-MM-dd HH:mm:ss"))
-(def pretty-formatter (time-format/formatters :rfc822))
-(def nav-state (r/atom {:location "/home" :about-us-category nil}))
+
+(defonce jquery (js* "$"))
+(defonce sql-formatter (time-format/formatter "yyyy-MM-dd HH:mm:ss"))
+(defonce pretty-formatter (time-format/formatters :rfc822))
+(defonce location-state (r/atom "/home"))
+(defonce about-us-category-state (r/atom nil))
+(defonce menu-main-state (r/atom []))
+(defonce menu-user-state (r/atom []))
+(defonce menu-user-label (r/atom nil))
 
 ;; helper functions
 
@@ -212,10 +217,10 @@
      [:tbody
       [:tr
        [:td {:class "banner-menu"}
-        [:div {:id "menu-user"}]]
+        [comp-menu-user]]
        [:td {:class "banner-title"} "Bogen-" [:i "Herr"]]
        [:td {:class "banner-menu"} " "]]]]]
-   [:div {:id "menu" :class "well"}]
+   [comp-menu-main]
    [ck-notifications/comp-errormsg]
    [ck-notifications/comp-message]
    [:div {:id "body"}]
@@ -230,16 +235,16 @@
     (rdc/render app-root [comp-app])))
 
 (defn start-location []
-  (cond (str/starts-with? (@nav-state :location) "/register/")
-        (goto-register (str/replace-first (@nav-state :location) "/register/" ""))
+  (cond (str/starts-with? @location-state "/register/")
+        (goto-register (str/replace-first @location-state "/register/" ""))
         :else
-        (goto-location (@nav-state :location))))
+        (goto-location @location-state)))
 
 (defn reset-location [url]
-  (reset! nav-state (assoc @nav-state :location url)))
+  (reset! location-state url))
 
 (defn reset-about-us-category [category]
-  (reset! nav-state (assoc @nav-state :about-us-category category)))
+  (reset! about-us-category-state category))
 
 (defn ^:dev/after-load start
   ([]
@@ -266,20 +271,22 @@
 
 ;; menu
 
-(hiccups/defhtml template-menu [menuitems]
-  [:ul {:class "nav nav-pills"}
-   (for [menuitem menuitems]
-     [:li {:class "nav-item"}
-      [:a {:class (cond (= (str/upper-case (get menuitem "handler"))
-                           (str/upper-case (@nav-state :location)))
-                        "nav-link active"
-                        :else
-                        "nav-link")
-           :id (get menuitem "id")
-           :onclick (str (namespace ::x) ".on_menu_clicked('" (get menuitem "handler") "')")}
-       (get menuitem "label")]])])
+(defn comp-menu-main []
+  [:div {:class "well"}
+   [:ul {:class "nav nav-pills"}
+    (for [menuitem @menu-main-state]
+      [:li {:key (str "li_" (get menuitem "id"))
+            :class "nav-item"}
+       [:a {:class (cond (= (str/upper-case (get menuitem "handler"))
+                            (str/upper-case @location-state))
+                         "nav-link active"
+                         :else
+                         "nav-link")
+            :key (get menuitem "id")
+            :on-click #(on-menu-clicked (get menuitem "handler"))}
+        (get menuitem "label")]])]])
 
-(hiccups/defhtml template-menu-user [jsonobj]
+(defn comp-menu-user []
   [:div {:class "dropdown"}
    [:button {:class "btn btn-primary dropdown-toggle"
              :type "button"
@@ -287,20 +294,22 @@
              :data-toggle "dropdown"
              :aria-haspopup "true"
              :aria-expanded "false"}
-    (get jsonobj "label")]
+    @menu-user-label]
    [:div {:class "dropdown-menu" :aria-labelledby "button-menu-user"}
-    (for [menuitem (get jsonobj "menuitems")]
-      [:a {:class "dropdown-item"
-           :onclick (str (namespace ::x) ".on_menu_clicked('" (get menuitem "handler") "')")}
+    (for [menuitem @menu-user-state]
+      [:a {:key (get menuitem "id")
+           :class "dropdown-item"
+           :on-click #(on-menu-clicked (get menuitem "handler"))}
        (get menuitem "label")])]])
 
 (defn handler-menu [response]
   (let [jsonobj (js->clj (js/JSON.parse response))]
-    (dommy/set-html! (dommy/sel1 :#menu) (template-menu (get jsonobj "menuitems")))))
+    (reset! menu-main-state (get jsonobj "menuitems"))))
 
 (defn handler-menu-user [response]
   (let [jsonobj (js->clj (js/JSON.parse response))]
-    (dommy/set-html! (dommy/sel1 :#menu-user) (template-menu-user jsonobj))))
+    (reset! menu-user-state (get jsonobj "menuitems"))
+    (reset! menu-user-label (get jsonobj "label"))))
 
 (defn render-menu []
   (GET "/menu" {:handler handler-menu})
@@ -533,8 +542,8 @@
 
 (hiccups/defhtml template-about-us [jsonobj]
   [:h1 {:style "text-align: center"}
-   (cond (= (@nav-state :about-us-category) "lessons") "About the Studio"
-         (= (@nav-state :about-us-category) "gigs") "Hire Me to Play")]
+   (cond (= @about-us-category-state "lessons") "About the Studio"
+         (= @about-us-category-state "gigs") "Hire Me to Play")]
   [:div {:id "content"}]
   [:div {:id "modify"
          :class "modal fade"
@@ -587,8 +596,8 @@
     (dommy/set-html! (dommy/sel1 :#markdown) (markdown-to-html (get jsonobj "content")))))
 
 (defn render-about-us-view []
-  (GET (cond (= (@nav-state :about-us-category) "lessons") "/lessons/view"
-             (= (@nav-state :about-us-category) "gigs") "/gigs/view")
+  (GET (cond (= @about-us-category-state "lessons") "/lessons/view"
+             (= @about-us-category-state "gigs") "/gigs/view")
        {:handler handler-about-us-view}))
 
 ;; about-us-modify
@@ -603,15 +612,15 @@
   (let [jsonobj (js->clj (js/JSON.parse response))]
     (auth-notifications jsonobj)
     (dommy/set-html! (dommy/sel1 :#modify-title)
-                     (str (cond (= (@nav-state :about-us-category) "lessons") "About the Studio"
-                                (= (@nav-state :about-us-category) "gigs") "For Hire")
+                     (str (cond (= @about-us-category-state "lessons") "About the Studio"
+                                (= @about-us-category-state "gigs") "For Hire")
                           " - Modify"))
     (dommy/set-html! (dommy/sel1 :#modify-body) (template-about-us-modify jsonobj))
     (.modal (jquery "#modify"))))
 
 (defn render-about-us-modify []
-  (POST (cond (= (@nav-state :about-us-category) "lessons") "/lessons/modify"
-              (= (@nav-state :about-us-category) "gigs") "/gigs/modify")
+  (POST (cond (= @about-us-category-state "lessons") "/lessons/modify"
+              (= @about-us-category-state "gigs") "/gigs/modify")
         {:handler handler-about-us-modify}))
 
 ;; about-us-modify-submit
@@ -630,8 +639,8 @@
     (dommy/set-html! (dommy/sel1 :#markdown) (markdown-to-html (get jsonobj "content")))))
 
 (defn render-about-us-modify-submit []
-  (POST (cond (= (@nav-state :about-us-category) "lessons") "/lessons/modify/submit"
-              (= (@nav-state :about-us-category) "gigs") "/gigs/modify/submit")
+  (POST (cond (= @about-us-category-state "lessons") "/lessons/modify/submit"
+              (= @about-us-category-state "gigs") "/gigs/modify/submit")
         {:format :raw
          :params {:content (dommy/value (dommy/sel1 :#txt-content))}
          :handler handler-about-us-modify-submit}))
